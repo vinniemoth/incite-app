@@ -2,12 +2,14 @@
 import { useState } from "react";
 import { FaEnvelope, FaLock, FaUser } from "react-icons/fa6";
 import { moduleApi } from "@/api/api";
+import { useRouter } from "next/navigation";
 
 export default function Page() {
   const [mode, setMode] = useState("login");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const router = useRouter();
 
   const toggleMode = () => {
     mode === "login" ? setMode("register") : setMode("login");
@@ -30,14 +32,15 @@ export default function Page() {
       alert("Preencha todos os campos");
       return;
     }
-    let result = await moduleApi.loginUser(email, password);
 
-    if (result.status >= 200 && result.status < 300) {
-      alert("Logado com sucesso!");
-    } else if (result.status >= 400 && result.status < 500) {
-      alert("Credenciais inválidas");
+    let json = await moduleApi.loginUser(email, password);
+
+    if (json.token) {
+      localStorage.setItem("authToken", json.token);
+      alert(json.message);
+      router.push("/feed");
     } else {
-      alert("Erro interno do Servidor");
+      alert(json.message);
     }
   };
 

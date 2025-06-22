@@ -24,9 +24,6 @@ export const moduleApi = {
       },
       body: JSON.stringify({ email, password }),
     });
-    return {
-      status: response.status,
-      json: await response.json(),
-    };
+    return response.json();
   },
 };

@@ -1,6 +1,7 @@
-import { PrismaClient } from "@prisma/client";
 import express from "express";
 import bcrypt from "bcryptjs";
+import { PrismaClient } from "@prisma/client";
+import jwt from "jsonwebtoken";
 
 const prisma = new PrismaClient();
 const router = express.Router();
@@ -48,21 +49,28 @@ router.post("/login", async (req, res) => {
     }
     const passwordIsValid = bcrypt.compareSync(password, user.password);
 
-    if (passwordIsValid) {
-      return res.status(201).json({
-        message: "Login feito com sucesso",
-        user: { id: user.id, username: user.username, email: user.email },
+    if (!passwordIsValid) {
+      return res.status(401).json({
+        message: "Credenciais inválidas",
       });
-    } else {
-      return res.status(404).send({ message: "Credenciais Inválidas" });
     }
+    const tokenPayload = {
+      id: user.id,
+      email: user.email,
+    };
+    const token = jwt.sign(tokenPayload, process.env.JWT_SECRET, {
+      expiresIn: "1h",
+    });
+    return res.status(200).json({
+      message: "Login feito com sucesso!",
+      user: { id: user.id, email: user.email },
+      token,
+    });
   } catch (err) {
     console.error("Erro no login do usuário", err);
-    return res
-      .status(500)
-      .json({
-        message: "Ocorreu um erro interno no servidor durante o login.",
-      });
+    return res.status(500).json({
+      message: "Ocorreu um erro interno no servidor durante o login.",
+    });
   }
 });
 
