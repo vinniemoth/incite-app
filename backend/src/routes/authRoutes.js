@@ -1,0 +1,69 @@
+import { PrismaClient } from "@prisma/client";
+import express from "express";
+import bcrypt from "bcryptjs";
+
+const prisma = new PrismaClient();
+const router = express.Router();
+
+router.get("/", (req, res) => {
+  res.send("Hello Auth!");
+});
+
+router.post("/", async (req, res) => {
+  const { username, email, password } = req.body;
+  const hashedPassword = await bcrypt.hash(password, 10);
+  console.log(username, email, password);
+  try {
+    const newUser = await prisma.user.create({
+      data: {
+        username,
+        email,
+        password: hashedPassword,
+      },
+    });
+    return res
+      .status(201)
+      .json({ message: "Usuário criado com sucesso!", newUser });
+  } catch (err) {
+    return res.status(500).json({ message: "Erro interno do servidor." });
+  }
+});
+
+router.post("/login", async (req, res) => {
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    return res.status(400).json({ message: "Email e senha obrigatórios" });
+  }
+
+  try {
+    const user = await prisma.user.findUnique({
+      where: {
+        email,
+      },
+    });
+
+    if (!user) {
+      return res.status(401).json({ message: "Credenciais Inválidas" });
+    }
+    const passwordIsValid = bcrypt.compareSync(password, user.password);
+
+    if (passwordIsValid) {
+      return res.status(201).json({
+        message: "Login feito com sucesso",
+        user: { id: user.id, username: user.username, email: user.email },
+      });
+    } else {
+      return res.status(404).send({ message: "Credenciais Inválidas" });
+    }
+  } catch (err) {
+    console.error("Erro no login do usuário", err);
+    return res
+      .status(500)
+      .json({
+        message: "Ocorreu um erro interno no servidor durante o login.",
+      });
+  }
+});
+
+export default router;

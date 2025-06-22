@@ -1,0 +1,15 @@
+services:
+  incite_pg:
+    image: postgres:17-alpine
+    container_name: incite_pg
+    restart: always
+    environment:
+      POSTGRES_DB: incite
+      POSTGRES_USER: incite
+      POSTGRES_PASSWORD: incite
+    volumes:
+      - ./pg_data:/var/lib/postgresql/data # a pasta pg_data tem que ir pro gitignore
+    ports:
+      - 5432:5432
+    expose:
+      - 5432
