@@ -1,5 +1,5 @@
-import Reactions from "./reactions";
 import Image from "next/image";
+import { FaQuoteLeft, FaQuoteRight } from "react-icons/fa6";
 
 export default function Post() {
   return (
@@ -25,6 +25,7 @@ export default function Post() {
             alt=""
           />
           <div className="flex flex-col gap-2">
+            <FaQuoteLeft size={120} opacity={0.1}></FaQuoteLeft>
             <h1 className="text-lg font-ultra">Wild Dark Shore: A Novel</h1>
             <small>Charlotte McConaghy</small>
             <div className="py-1">
@@ -33,6 +34,11 @@ export default function Post() {
                 our whole selves, knowing they will die.”
               </h1>
             </div>
+            <FaQuoteRight
+              className="self-end"
+              size={120}
+              opacity={0.1}
+            ></FaQuoteRight>
           </div>
         </div>
       </div>

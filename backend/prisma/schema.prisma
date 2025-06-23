@@ -12,4 +12,17 @@ model User {
   username    String
   email       String          @unique
   password    String
+  posts       Post[]
+}
+
+model Post {
+  id          String          @id @default(uuid())
+  bookName    String
+  authorName  String
+  coverImage  String          
+  quote       String          @db.Text
+
+  // Relationship
+  ownerId     String
+  owner       User            @relation(fields:[ownerId], references:[id])
 }
