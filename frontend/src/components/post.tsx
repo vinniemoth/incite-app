@@ -31,7 +31,7 @@ export default function Post(Props: PostProps) {
         <div className="sm:w-3/4 sm:h-3/4 sm:flex-row flex-col items-center rounded-lg flex p-5 gap-5 w-full bg-zinc-800">
           {Props.coverImageUrl && (
             <Image
-              className="rounded-lg sm:w-130"
+              className="rounded-lg sm:w-80"
               src={Props.coverImageUrl}
               width={200}
               height={200}

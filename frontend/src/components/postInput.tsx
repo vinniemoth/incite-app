@@ -169,42 +169,27 @@ export default function PostInput() {
 
     let finalCoverUrl: string | null = null;
 
-    // --- INÍCIO: Lógica para selecionar e otimizar o URL da capa do livro ---
     if (book.volumeInfo?.imageLinks) {
-      // Priorizar 'medium'
       if (book.volumeInfo.imageLinks.medium) {
         finalCoverUrl = book.volumeInfo.imageLinks.medium;
-      }
-      // Fallback para 'large' se medium não estiver disponível (bom para verificar resoluções mais altas)
-      else if (book.volumeInfo.imageLinks.large) {
+      } else if (book.volumeInfo.imageLinks.large) {
         finalCoverUrl = book.volumeInfo.imageLinks.large;
-      }
-      // Fallback para 'thumbnail' se medium/large não estiverem disponíveis
-      else if (book.volumeInfo.imageLinks.thumbnail) {
+      } else if (book.volumeInfo.imageLinks.thumbnail) {
         finalCoverUrl = book.volumeInfo.imageLinks.thumbnail;
-      }
-      // Fallback para 'smallThumbnail' como último recurso
-      else if (book.volumeInfo.imageLinks.smallThumbnail) {
+      } else if (book.volumeInfo.imageLinks.smallThumbnail) {
         finalCoverUrl = book.volumeInfo.imageLinks.smallThumbnail;
       }
 
-      // Se um URL foi encontrado, aplicar o parâmetro 'fife' para dimensões específicas
       if (finalCoverUrl) {
-        // Garantir remover parâmetros 'fife' existentes para evitar conflitos ou duplicação
         finalCoverUrl = finalCoverUrl.split("&fife=")[0];
 
-        // Adicionar o parâmetro 'fife'. Escolha uma resolução que se adapte às suas necessidades.
-        // Para uma boa qualidade num feed, 'w400' ou 'w500' é frequentemente um bom equilíbrio.
-        // 'w' mantém a proporção.
-        finalCoverUrl += "&fife=w400"; // Solicitar uma largura de 400 pixels
+        finalCoverUrl += "&fife=w400";
       }
+
+      setSelectedBookCover(finalCoverUrl);
+      setSuggestedBooksByAuthor([]);
     }
-    // --- FIM: Lógica para selecionar e otimizar o URL da capa do livro ---
-
-    setSelectedBookCover(finalCoverUrl); // Definir o URL otimizado
-    setSuggestedBooksByAuthor([]);
   };
-
   return (
     <div className="flex flex-col w-full items-center py-8">
       <h2 className="font-ultra text-4xl text-white mb-6">

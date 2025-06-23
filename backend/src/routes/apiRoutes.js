@@ -1,5 +1,7 @@
 import { Router } from "express";
+import { PrismaClient } from "@prisma/client";
 
+const prisma = new PrismaClient();
 const router = Router();
 
 router.get("/books-search", async (req, res) => {
@@ -35,4 +37,34 @@ router.get("/books-search", async (req, res) => {
   }
 });
 
+router.get("/users/search", async (req, res) => {
+  const { username } = req.query;
+  if (!username) {
+    return res
+      .status(400)
+      .json({ error: "O parâmetro 'username' é obrigatório" });
+  }
+  try {
+    const users = await prisma.user.findMany({
+      where: {
+        username: {
+          contains: username,
+          //   mode: "insensitive",
+        },
+      },
+      select: {
+        id: true,
+        username: true,
+        email: true,
+        // avatarUrl: true,
+      },
+    });
+    if (users.length === 0) {
+      return res.status(404).json({ message: "Usuário não encontrado" });
+    }
+    return res.status(200).json(users);
+  } catch (err) {
+    console.error(err);
+  }
+});
 export default router;

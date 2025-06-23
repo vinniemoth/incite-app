@@ -83,4 +83,18 @@ export const moduleApi = {
     });
     return response.json();
   },
+
+  fetchUsers: async (search: string) => {
+    const token = localStorage.getItem("authToken");
+    const response = await fetch(
+      `http://localhost:5000/api/users/search?username=${search.trim()}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${token}`,
+        },
+      }
+    );
+    return response.json();
+  },
 };
