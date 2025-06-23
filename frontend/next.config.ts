@@ -17,6 +17,16 @@ module.exports = {
         hostname: "github.com",
         pathname: "/**",
       },
+      {
+        protocol: "http",
+        hostname: "books.google.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "ui-avatars.com",
+        pathname: "/**",
+      },
     ],
   },
 };

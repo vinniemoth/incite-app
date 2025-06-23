@@ -79,6 +79,7 @@ export default function PostInput() {
     ) {
       setSuggestedBooksByAuthor([]);
       setLoadingSuggestions(false);
+      console.log(selectedFullBook);
       return;
     }
 
@@ -145,7 +146,7 @@ export default function PostInput() {
     setFinalBookTitle(null);
     setSelectedBookCover(null);
     setSelectedFullBook(null);
-    alert("Quote shared successfully! (This is a demo, no actual save yet)");
+    return json;
   };
 
   const handleSelectAuthor = (author: string) => {
@@ -161,38 +162,48 @@ export default function PostInput() {
   };
 
   const handleSelectBook = (book: any) => {
-    const title = book.volumeInfo?.title || "Unknown Title";
+    const title = book.volumeInfo?.title || "Título Desconhecido";
     setBookNameSearchTerm(title);
     setFinalBookTitle(title);
     setSelectedFullBook(book);
-    setSelectedBookCover(book.volumeInfo?.imageLinks?.thumbnail || null);
+
+    let finalCoverUrl: string | null = null;
+
+    // --- INÍCIO: Lógica para selecionar e otimizar o URL da capa do livro ---
+    if (book.volumeInfo?.imageLinks) {
+      // Priorizar 'medium'
+      if (book.volumeInfo.imageLinks.medium) {
+        finalCoverUrl = book.volumeInfo.imageLinks.medium;
+      }
+      // Fallback para 'large' se medium não estiver disponível (bom para verificar resoluções mais altas)
+      else if (book.volumeInfo.imageLinks.large) {
+        finalCoverUrl = book.volumeInfo.imageLinks.large;
+      }
+      // Fallback para 'thumbnail' se medium/large não estiverem disponíveis
+      else if (book.volumeInfo.imageLinks.thumbnail) {
+        finalCoverUrl = book.volumeInfo.imageLinks.thumbnail;
+      }
+      // Fallback para 'smallThumbnail' como último recurso
+      else if (book.volumeInfo.imageLinks.smallThumbnail) {
+        finalCoverUrl = book.volumeInfo.imageLinks.smallThumbnail;
+      }
+
+      // Se um URL foi encontrado, aplicar o parâmetro 'fife' para dimensões específicas
+      if (finalCoverUrl) {
+        // Garantir remover parâmetros 'fife' existentes para evitar conflitos ou duplicação
+        finalCoverUrl = finalCoverUrl.split("&fife=")[0];
+
+        // Adicionar o parâmetro 'fife'. Escolha uma resolução que se adapte às suas necessidades.
+        // Para uma boa qualidade num feed, 'w400' ou 'w500' é frequentemente um bom equilíbrio.
+        // 'w' mantém a proporção.
+        finalCoverUrl += "&fife=w400"; // Solicitar uma largura de 400 pixels
+      }
+    }
+    // --- FIM: Lógica para selecionar e otimizar o URL da capa do livro ---
+
+    setSelectedBookCover(finalCoverUrl); // Definir o URL otimizado
     setSuggestedBooksByAuthor([]);
   };
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        authorSuggestionsRef.current &&
-        !authorSuggestionsRef.current.contains(event.target as Node) &&
-        authorInputRef.current &&
-        !authorInputRef.current.contains(event.target as Node)
-      ) {
-        setSuggestedAuthors([]);
-      }
-      if (
-        bookSuggestionsRef.current &&
-        !bookSuggestionsRef.current.contains(event.target as Node) &&
-        bookInputRef.current &&
-        !bookInputRef.current.contains(event.target as Node)
-      ) {
-        setSuggestedBooksByAuthor([]);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
 
   return (
     <div className="flex flex-col w-full items-center py-8">

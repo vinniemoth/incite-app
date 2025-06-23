@@ -71,4 +71,16 @@ export const moduleApi = {
     });
     return response.json;
   },
+
+  fetchPosts: async () => {
+    const token = localStorage.getItem("authToken");
+    const response = await fetch("http://localhost:5000/post", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `${token}`,
+      },
+    });
+    return response.json();
+  },
 };

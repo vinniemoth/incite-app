@@ -6,10 +6,6 @@ import jwt from "jsonwebtoken";
 const prisma = new PrismaClient();
 const router = express.Router();
 
-router.get("/", (req, res) => {
-  res.send("Hello Auth!");
-});
-
 router.post("/", async (req, res) => {
   const { username, email, password } = req.body;
   const hashedPassword = await bcrypt.hash(password, 10);

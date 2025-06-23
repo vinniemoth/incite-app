@@ -19,7 +19,7 @@ export default function Reactions() {
   };
 
   return (
-    <div className="flex fixed bottom-0 justify-evenly w-full py-5 bg-zinc-800 rounded-t-2xl">
+    <div className="flex flex-row sm:flex-col justify-around w-full h-20 sm:h-full sm:w-20 py-5 bg-zinc-800 rounded-t-4xl sm:rounded-l-4xl sm:rounded-r-none items-center sm:right-0 sm:top-0 fixed bottom-0">
       <FaThumbsUp
         onPointerDown={() => handleReaction("like")}
         size={50}

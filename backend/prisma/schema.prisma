@@ -13,6 +13,20 @@ model User {
   email       String          @unique
   password    String
   posts       Post[]
+
+  following   UserFollows[]   @relation("FollowerToFollowing")
+  followers   UserFollows[]   @relation("FollowingToFollower")
+}
+
+model UserFollows {
+  id          String          @id @default(uuid())
+  followerId  String
+  followingId String
+
+  follower    User            @relation("FollowerToFollowing", fields:[followerId], references: [id])
+  following   User            @relation("FollowingToFollower", fields:[followingId], references: [id])
+
+  @@unique([followerId, followingId])
 }
 
 model Post {
@@ -21,6 +35,7 @@ model Post {
   authorName  String
   coverImage  String          
   quote       String          @db.Text
+  createdAt   DateTime        @default(now())
 
   // Relationship
   ownerId     String
