@@ -34,7 +34,11 @@ export default function Home() {
     const handler = setTimeout(async () => {
       try {
         const data = await moduleApi.fetchUsers(search);
-        setSuggestedUsers(data);
+        if (Array.isArray(data)) {
+          setSuggestedUsers(data);
+        } else {
+          setSuggestedUsers([]);
+        }
       } catch (error: any) {
         console.error("Erro ao buscar sugestões de usuário:", error);
         setSuggestionError(

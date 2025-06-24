@@ -49,7 +49,7 @@ router.get("/users/search", async (req, res) => {
       where: {
         username: {
           contains: username,
-          //   mode: "insensitive",
+          mode: "insensitive",
         },
       },
       select: {
