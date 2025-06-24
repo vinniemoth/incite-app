@@ -70,4 +70,9 @@ router.post("/login", async (req, res) => {
   }
 });
 
+router.post("/logout", (req, res) => {
+  console.log("Requisição de logout recebida");
+  return res.status(200).json({ message: "Logout feito com sucesso!" });
+});
+
 export default router;

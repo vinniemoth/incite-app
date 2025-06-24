@@ -5,6 +5,7 @@ import { FaMagnifyingGlass, FaCircleArrowDown } from "react-icons/fa6";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { moduleApi } from "@/api/api";
+import Logout from "@/components/logout";
 
 export default function Home() {
   const router = useRouter();
@@ -109,6 +110,7 @@ export default function Home() {
         className="cursor-pointer hover:text-zinc-400"
         onClick={() => router.push("/feed")}
       ></FaCircleArrowDown>
+      <Logout></Logout>
     </div>
   );
 }

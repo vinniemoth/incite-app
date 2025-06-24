@@ -97,4 +97,16 @@ export const moduleApi = {
     );
     return response.json();
   },
+
+  logout: async () => {
+    const token = localStorage.getItem("authToken");
+    const response = await fetch("http://localhost:5000/auth/logout", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `${token}`,
+      },
+    });
+    return response.json();
+  },
 };
