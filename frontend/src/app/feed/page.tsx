@@ -2,7 +2,6 @@
 "use client";
 
 import Post from "@/components/post";
-import Reactions from "@/components/reactions"; // Consider where Reactions should truly live
 import { FaLeftLong } from "react-icons/fa6";
 import { useRouter } from "next/navigation";
 import { moduleApi } from "@/api/api";
@@ -14,7 +13,6 @@ import { ptBR } from "date-fns/locale";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import { Keyboard, Mousewheel, FreeMode } from "swiper/modules";
-import { create } from "domain";
 
 interface PostData {
   id: string;
@@ -79,7 +77,7 @@ export default function Feed() {
   }, []);
 
   return (
-    <div className="w-screen h-screen flex flex-col items-center justify-start overflow-hidden bg-black text-white">
+    <div className="w-screen h-screen flex flex-col items-center justify-center overflow-hidden bg-black text-white">
       {" "}
       {loading && <p className="text-lg mt-8">Carregando citações...</p>}
       {error && <p className="text-red-400 text-lg mt-8">{error}</p>}
@@ -96,13 +94,24 @@ export default function Feed() {
           mousewheel={true}
           keyboard={{ enabled: true }}
           modules={[Keyboard, Mousewheel, FreeMode]}
-          className="mySwiper w-full h-full"
+          className="mySwiper w-2/3 h-full"
         >
           {posts.map((postData) => (
             <SwiperSlide
               key={postData.id}
               className="w-full h-full flex justify-center items-center"
             >
+              <div className="flex flex-col items-center justify-center gap-4 p-4">
+                <div
+                  onClick={() =>
+                    router.push(`/user/${postData.owner.username}`)
+                  }
+                  className="w-20 h-20 rounded-full bg-zinc-700 flex items-center justify-center text-3xl font-bold text-white border-2 border-purple-500 cursor-pointer"
+                >
+                  {postData.owner.username.charAt(0).toUpperCase()}
+                </div>
+                <p className="text-xl">{postData.owner.username}</p>
+              </div>
               <Post {...postData} />
             </SwiperSlide>
           ))}

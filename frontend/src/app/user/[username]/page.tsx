@@ -99,7 +99,7 @@ export default function UserProfile() {
   });
   return (
     <div className="flex flex-col items-center  min-h-screen bg-zinc-900 text-white">
-      <div className="w-full max-w-4xl h-screen">
+      <div className="flex justify-center items-center w-full h-screen">
         <Swiper
           direction={"vertical"}
           slidesPerView={1}
@@ -107,9 +107,9 @@ export default function UserProfile() {
           mousewheel={true}
           keyboard={{ enabled: true }}
           modules={[Keyboard, Mousewheel, FreeMode]}
-          className="mySwiper w-full h-full"
+          className="mySwiper w-full h-full flex items-center justify-center"
         >
-          <SwiperSlide key="user-profile-header">
+          <SwiperSlide key="user-profile-header flex flex-col justify-center align-center">
             <div className="flex flex-col items-center justify-center h-full p-4">
               <div className="mb-6">
                 <div className="w-20 h-20 rounded-full bg-zinc-700 flex items-center justify-center text-3xl font-bold text-white border-2 border-purple-500">
@@ -126,15 +126,19 @@ export default function UserProfile() {
                 <h2 className="text-3xl text-purple-300">Recently Quoted</h2>
                 {uniqueBookCovers.length > 0 ? (
                   <div className="flex flex-wrap justify-center gap-6 p-2 max-w-xl mx-auto">
-                    {uniqueBookCovers.map((post) => (
-                      <div key={post.id} className="relative group flex">
+                    {uniqueBookCovers.slice(0, 4).map((post) => (
+                      <div
+                        key={post.id}
+                        className="relative group flex flex-row "
+                      >
                         {post.coverImage && (
                           <Image
                             src={post.coverImage}
                             alt={`Cover image for ${post.bookName}`}
-                            width={120}
-                            height={180}
-                            className="rounded-lg shadow-md group-hover:scale-105 transition-transform duration-200 ease-in-out cursor-pointer border border-zinc-700"
+                            width={60}
+                            height={60}
+                            sizes="(max-width: 414px) 200px, (max-width: 1100px) 120px, 120px"
+                            className="w-full h-auto rounded-lg shadow-md group-hover:scale-105 transition-transform duration-200 ease-in-out cursor-pointer border border-zinc-700"
                           />
                         )}
                       </div>
@@ -159,19 +163,23 @@ export default function UserProfile() {
             ? userData.posts.map((postData) => (
                 <SwiperSlide
                   key={postData.id}
-                  className="w-full h-full flex gap-10 items-center justify-center"
+                  className="w-full h-full flex justify-center items-center"
                 >
-                  <Post
-                    id={postData.id}
-                    createdAt={formatDistanceToNow(postData.createdAt, {
-                      addSuffix: true,
-                      locale: ptBR,
-                    })}
-                    coverImage={postData.coverImage}
-                    bookName={postData.bookName}
-                    authorName={postData.authorName}
-                    quote={postData.quote}
-                  />
+                  <div className="w-full h-full flex items-center justify-center">
+                    <div className="sm:w-2/3 h-full flex justify-center items-center p-5">
+                      <Post
+                        id={postData.id}
+                        createdAt={formatDistanceToNow(postData.createdAt, {
+                          addSuffix: true,
+                          locale: ptBR,
+                        })}
+                        coverImage={postData.coverImage}
+                        bookName={postData.bookName}
+                        authorName={postData.authorName}
+                        quote={postData.quote}
+                      />
+                    </div>
+                  </div>
                 </SwiperSlide>
               ))
             : null}

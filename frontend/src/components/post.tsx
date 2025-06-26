@@ -13,28 +13,33 @@ interface PostProps {
 
 export default function Post(Props: PostProps) {
   return (
-    <div className="bg-zinc-800 rounded-lg shadow-lg p-6 w-full justify-start gap-4 mx-auto my-30 items-center flex flex-row">
+    <div className="bg-zinc-800 rounded-lg sm:h-2/3 shadow-lg p-6 w-full mx-auto flex sm:flex-row flex-col items-center justify-center gap-4">
       <div>
         <Image
           src={Props.coverImage || ""}
-          alt={Props.bookName}
-          width={200}
-          height={200}
+          alt={"Cover image for " + Props.bookName}
+          width={350}
+          height={350}
           className="mr-4"
         />
       </div>
-      <div className="flex flex-col">
+
+      <div className="flex flex-col justify-center flex-grow">
         <div>
           <h2 className="text-lg font-semibold">{Props.bookName}</h2>
           <small className="text-purple-500">{Props.authorName}</small>
         </div>
+
         <div className="mb-4">
-          <FaQuoteLeft className="text-gray-400 mr-2" />
-          {Props.quote}
-          <FaQuoteRight className="text-gray-400 ml-2" />
+          <span className="flex items-start">
+            <FaQuoteLeft className="text-gray-400 mr-2 flex-shrink-0" />{" "}
+            <p className="flex-grow">{Props.quote}</p>{" "}
+            <FaQuoteRight className="text-gray-400 ml-2 flex-shrink-0" />
+          </span>
         </div>
-        <div className="flex justify-between items-center">
-          <p className="text-purple-500">{Props.createdAt}</p>
+
+        <div className="flex justify-end">
+          <small className="text-purple-500">{Props.createdAt}</small>
         </div>
       </div>
     </div>
