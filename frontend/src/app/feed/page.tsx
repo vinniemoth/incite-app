@@ -14,8 +14,9 @@ import { ptBR } from "date-fns/locale";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import { Keyboard, Mousewheel, FreeMode } from "swiper/modules";
+import { create } from "domain";
 
-interface FetchedPost {
+interface PostData {
   id: string;
   bookName: string;
   authorName: string;
@@ -30,21 +31,10 @@ interface FetchedPost {
   ownerId: string;
 }
 
-interface PostProps {
-  id: string;
-  username: string;
-  userAvatarUrl: string;
-  timeAgo: string;
-  coverImageUrl: string | null;
-  bookTitle: string;
-  authorName: string;
-  quoteContent: string;
-}
-
 export default function Feed() {
   const router = useRouter();
 
-  const [posts, setPosts] = useState<PostProps[]>([]);
+  const [posts, setPosts] = useState<PostData[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -53,26 +43,23 @@ export default function Feed() {
     setError(null);
 
     try {
-      const fetchedPosts: FetchedPost[] = await moduleApi.fetchPosts();
+      const fetchedPosts: PostData[] = await moduleApi.fetchPosts();
       console.log("Posts recebidos da API:", fetchedPosts);
 
-      const formattedPosts: PostProps[] = fetchedPosts.map((post) => {
-        const userAvatar =
-          post.owner.avatarUrl ||
-          `https://ui-avatars.com/api/?name=${post.owner.username}&background=random&color=fff`;
-
+      const formattedPosts = fetchedPosts.map((post) => {
         return {
           id: post.id,
           username: post.owner.username,
-          userAvatarUrl: userAvatar,
-          timeAgo: formatDistanceToNow(new Date(post.createdAt), {
+          createdAt: formatDistanceToNow(new Date(post.createdAt), {
             addSuffix: true,
             locale: ptBR,
           }),
-          coverImageUrl: post.coverImage,
-          bookTitle: post.bookName,
+          coverImage: post.coverImage,
+          bookName: post.bookName,
           authorName: post.authorName,
-          quoteContent: post.quote,
+          quote: post.quote,
+          owner: post.owner,
+          ownerId: post.ownerId,
         };
       });
 

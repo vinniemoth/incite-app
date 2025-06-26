@@ -15,7 +15,7 @@ export default function Logout() {
   };
 
   return (
-    <div className="absolute top-5 right-10" onClick={logout}>
+    <div className="absolute top-5 right-5" onClick={logout}>
       <FaSignOutAlt
         size={40}
         className="cursor-pointer bg-zinc-800 p-2 rounded hover:bg-zinc-700 hover:ring-2 hover:ring-purple-500"

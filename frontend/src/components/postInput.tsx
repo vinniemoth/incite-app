@@ -192,7 +192,7 @@ export default function PostInput() {
   };
   return (
     <div className="flex flex-col w-full items-center py-8">
-      <h2 className="font-ultra text-4xl text-white mb-6">
+      <h2 className="font-ultra text-4xl text-white mb-6 text-center">
         Want to share a quote?
       </h2>
       <form

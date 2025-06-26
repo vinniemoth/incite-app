@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { moduleApi } from "@/api/api";
 import Logout from "@/components/logout";
+import Link from "next/link";
 
 export default function Home() {
   const router = useRouter();
@@ -69,7 +70,7 @@ export default function Home() {
         {" "}
         <FaMagnifyingGlass className="absolute top-3 left-6 text-zinc-400" />{" "}
         <input
-          className="w-full pl-8 h-10 border border-zinc-600 rounded-lg p-3 bg-zinc-800 text-zinc-200 placeholder-zinc-500 focus:ring-2 focus:ring-purple-500 focus:outline-none"
+          className="sm:w-full w-80 pl-8 h-10 border border-zinc-600 rounded-lg p-3 bg-zinc-800 text-zinc-200 placeholder-zinc-500 focus:ring-2 focus:ring-purple-500 focus:outline-none"
           type="text"
           placeholder="Search for your friends!"
           value={search}
@@ -91,7 +92,8 @@ export default function Home() {
                 </p>
               )}
             {suggestedUsers.map((user) => (
-              <div
+              <Link
+                href={`/user/${user.username}`}
                 key={user.id}
                 className="flex items-center gap-3 p-3 cursor-pointer hover:bg-zinc-600 border-b border-zinc-600 last:border-b-0"
                 onClick={() => handleSelectUser(user.username)}
@@ -99,7 +101,7 @@ export default function Home() {
                 <p className="text-white font-semibold text-sm">
                   {user.username}
                 </p>
-              </div>
+              </Link>
             ))}
           </div>
         )}

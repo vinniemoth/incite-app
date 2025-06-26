@@ -98,6 +98,20 @@ export const moduleApi = {
     return response.json();
   },
 
+  fetchUser: async (username: string) => {
+    const token = localStorage.getItem("authToken");
+    const response = await fetch(
+      `http://localhost:5000/api/users/profile?username=${username}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${token}`,
+        },
+      }
+    );
+    return response.json();
+  },
+
   logout: async () => {
     const token = localStorage.getItem("authToken");
     const response = await fetch("http://localhost:5000/auth/logout", {
