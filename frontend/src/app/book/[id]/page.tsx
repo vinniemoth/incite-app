@@ -3,14 +3,13 @@
 import { moduleApi } from "@/api/api";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { formatDistanceToNow } from "date-fns";
+import { format, formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
-import { Keyboard, Mousewheel, FreeMode } from "swiper/modules";
+import { Keyboard, Mousewheel, FreeMode, Pagination } from "swiper/modules";
 import Post from "@/components/post";
 
 interface BookInfo {
@@ -50,7 +49,6 @@ interface Post {
 export default function BookPage() {
   const params = useParams();
   const id = params.id as string;
-  const router = useRouter();
 
   const [book, setBook] = useState<BookInfo | null>(null);
   const [posts, setPosts] = useState<Post[] | null>([]);
@@ -68,6 +66,7 @@ export default function BookPage() {
   const fetchPostsByBookId = async () => {
     const postResponse = await moduleApi.fetchPostsByBookId(id);
     setPosts(postResponse);
+    console.log(postResponse);
     return postResponse;
   };
 
@@ -76,68 +75,155 @@ export default function BookPage() {
     fetchPostsByBookId();
   }, [id]);
 
-  if (book && book.volumeInfo.imageLinks.medium && posts) {
-    // const dateObject = parseISO(book?.volumeInfo.publishedDate);
-    // const formattedDate = format(dateObject, "dd/MM/yyyy", { locale: ptBR });
-
+  if (!book || !book.volumeInfo) {
     return (
-      <div className="flex flex-col items-center w-full min-h-screen bg-zinc-900 text-white">
-        <div className="flex justify-center items-center w-full h-screen">
-          <Swiper
-            direction={"vertical"}
-            slidesPerView={1}
-            spaceBetween={0}
-            mousewheel={true}
-            keyboard={{ enabled: true }}
-            modules={[Keyboard, Mousewheel, FreeMode]}
-            className="mySwiper w-full h-full flex items-center justify-center"
-          >
-            <SwiperSlide key="user-profile-header slide">
-              <div className="flex flex-col h-full justify-center items-center gap-3">
-                <Image
-                  src={book.volumeInfo.imageLinks.medium}
-                  alt={book.volumeInfo.title}
-                  height={160}
-                  width={160}
-                ></Image>
-                <h1 className="font-ultra">{book.volumeInfo.title}</h1>
-                <h1 className="font-ultra text-purple-400">
-                  {book.volumeInfo.authors}
-                </h1>
-                <p className="w-2/3 text-center">
-                  {book.volumeInfo.description}
-                </p>
-              </div>
-            </SwiperSlide>
-            {posts
-              ? posts.map((postData) => (
-                  <SwiperSlide
-                    key={postData.id}
-                    className="w-full h-full flex justify-center items-center"
-                  >
-                    <div className="w-full h-full flex items-center justify-center">
-                      <div className="sm:w-2/3 h-full flex justify-center items-center p-5">
-                        <Post
-                          username={postData.owner.username}
-                          id={postData.id}
-                          createdAt={formatDistanceToNow(postData.createdAt, {
-                            addSuffix: true,
-                            locale: ptBR,
-                          })}
-                          coverImage={postData.coverImage}
-                          bookName={postData.bookName}
-                          bookId={postData.bookId}
-                          authorName={postData.authorName}
-                          quote={postData.quote}
-                        />
-                      </div>
-                    </div>
-                  </SwiperSlide>
-                ))
-              : null}
-          </Swiper>
-        </div>
+      <div className="text-zinc-500 text-center py-10">
+        Carregando detalhes do livro...
       </div>
     );
   }
+
+  if (!book || !book.volumeInfo) {
+    return (
+      <div className="text-zinc-500 text-center py-10">
+        Carregando detalhes do livro...
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex flex-col items-center w-full min-h-screen bg-zinc-900 text-white">
+      <div className="w-full h-screen flex justify-center items-center">
+        <Swiper
+          direction={"vertical"}
+          slidesPerView={1}
+          spaceBetween={0}
+          mousewheel={true}
+          keyboard={{ enabled: true }}
+          pagination={{ clickable: true }}
+          modules={[Keyboard, Mousewheel, FreeMode, Pagination]}
+          className="mySwiperVertical w-full h-full"
+        >
+          <SwiperSlide className="flex items-center justify-center p-4">
+            <div className="w-full h-full max-w-6xl mx-auto bg-zinc-800 rounded-2xl shadow-xl flex items-center justify-center p-4">
+              <Swiper
+                direction={"horizontal"}
+                slidesPerView={1}
+                spaceBetween={0}
+                mousewheel={true}
+                keyboard={{ enabled: true }}
+                pagination={{ clickable: true }}
+                modules={[Keyboard, Mousewheel, FreeMode, Pagination]}
+                className="mySwiperHorizontal w-full h-full"
+              >
+                <SwiperSlide className="flex items-center justify-center p-4">
+                  <div className="flex flex-col items-center gap-6 text-center justify-center">
+                    {book.volumeInfo.imageLinks?.large ||
+                    book.volumeInfo.imageLinks?.medium ? (
+                      <Image
+                        src={
+                          book.volumeInfo.imageLinks.large ||
+                          book.volumeInfo.imageLinks.medium!
+                        }
+                        alt={`Capa do livro ${book.volumeInfo.title}`}
+                        width={300}
+                        height={450}
+                        className="rounded-lg shadow-2xl border-4 border-purple-500 object-cover"
+                        priority
+                      />
+                    ) : (
+                      <div className="w-[300px] h-[450px] bg-zinc-700 rounded-lg flex items-center justify-center text-zinc-400 text-center text-lg p-6">
+                        Capa
+                        <br />
+                        Não
+                        <br />
+                        Disponível
+                      </div>
+                    )}
+                    <h2 className="font-extrabold text-2xl text-purple-400 mt-4">
+                      {book.volumeInfo.title}
+                    </h2>
+                    <p className="font-ultra text-lg text-zinc-300">
+                      {Array.isArray(book.volumeInfo.authors)
+                        ? book.volumeInfo.authors.join(", ")
+                        : book.volumeInfo.authors || "Autor Desconhecido"}
+                    </p>
+                  </div>
+                </SwiperSlide>
+
+                <SwiperSlide className="flex items-center justify-center p-4">
+                  <div className="flex flex-col text-center lg:text-left items-center lg:items-start max-w-3xl mx-auto">
+                    <h1 className="font-extrabold text-4xl lg:text-5xl text-purple-400 mb-2 leading-tight">
+                      {book.volumeInfo.title}
+                    </h1>
+                    <h2 className="font-ultra text-xl lg:text-2xl text-zinc-300 mb-4">
+                      {Array.isArray(book.volumeInfo.authors)
+                        ? book.volumeInfo.authors.join(", ")
+                        : book.volumeInfo.authors || "Autor Desconhecido"}
+                    </h2>
+                    <p
+                      className="text-base sm:text-lg lg:text-xl text-zinc-300 leading-relaxed
+                                  overflow-y-auto custom-scrollbar break-words
+                                 p-4 bg-zinc-700 rounded-lg shadow-inner"
+                      dangerouslySetInnerHTML={{
+                        __html:
+                          book.volumeInfo.description ||
+                          "Nenhuma descrição disponível para este livro.",
+                      }}
+                    ></p>
+                    {book.volumeInfo.publishedDate && (
+                      <p className="text-zinc-400 text-sm sm:text-base mt-4">
+                        Publicado:{" "}
+                        {format(
+                          new Date(book.volumeInfo.publishedDate),
+                          "dd/MM/yyyy",
+                          { locale: ptBR }
+                        )}
+                      </p>
+                    )}
+                  </div>
+                </SwiperSlide>
+              </Swiper>
+            </div>
+          </SwiperSlide>
+
+          {posts && posts.length > 0 ? (
+            posts.map((postData) => (
+              <SwiperSlide
+                key={postData.id}
+                className="flex justify-center items-center p-4 "
+              >
+                <div className="flex items-center mx-auto h-full">
+                  <Post
+                    id={postData.id}
+                    username={
+                      postData.owner?.username ?? "Usuário Desconhecido"
+                    }
+                    createdAt={formatDistanceToNow(
+                      new Date(postData.createdAt),
+                      {
+                        addSuffix: true,
+                        locale: ptBR,
+                      }
+                    )}
+                    coverImage={postData.coverImage}
+                    bookName={postData.bookName}
+                    bookId={postData.bookId}
+                    authorName={postData.authorName}
+                    quote={postData.quote}
+                  />
+                </div>
+              </SwiperSlide>
+            ))
+          ) : (
+            <SwiperSlide className="flex justify-center items-center">
+              <p className="text-zinc-500 text-lg text-center p-4">
+                Nenhuma citação encontrada para este livro ainda.
+              </p>
+            </SwiperSlide>
+          )}
+        </Swiper>
+      </div>
+    </div>
+  );
 }

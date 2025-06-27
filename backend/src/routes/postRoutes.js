@@ -79,6 +79,9 @@ router.get("/:bookId", async (req, res) => {
           },
         },
       },
+      orderBy: {
+        createdAt: "desc",
+      },
     });
     console.log(posts);
     return res.status(200).json(posts);

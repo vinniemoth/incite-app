@@ -104,18 +104,9 @@ export default function Feed() {
               key={postData.id}
               className="w-full h-full flex justify-center items-center"
             >
-              <div className="flex flex-col items-center justify-center gap-4 p-4">
-                <div
-                  onClick={() =>
-                    router.push(`/user/${postData.owner.username}`)
-                  }
-                  className="w-20 h-20 rounded-full bg-zinc-700 flex items-center justify-center text-3xl font-bold text-white border-2 border-purple-500 cursor-pointer"
-                >
-                  {postData.owner.username.charAt(0).toUpperCase()}
-                </div>
-                <p className="text-xl">{postData.owner.username}</p>
+              <div className="h-full flex items-center">
+                <Post {...postData} />
               </div>
-              <Post {...postData} />
             </SwiperSlide>
           ))}
         </Swiper>
