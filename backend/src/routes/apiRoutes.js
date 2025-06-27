@@ -44,7 +44,6 @@ router.get("/book/:id", async (req, res) => {
       `https://www.googleapis.com/books/v1/volumes/${id}?key=${googleBooksApiKey}`
     );
     const data = await response.json();
-    console.log(data);
     return res.status(200).json(data);
   } catch (err) {
     res.status(500).json(err);

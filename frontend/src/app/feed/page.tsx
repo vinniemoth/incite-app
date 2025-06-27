@@ -18,6 +18,7 @@ interface PostData {
   id: string;
   bookName: string;
   bookId: string;
+  username: string;
   authorName: string;
   coverImage: string | null;
   createdAt: string;

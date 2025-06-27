@@ -11,10 +11,12 @@ import Post from "@/components/post";
 import { formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import Reactions from "@/components/reactions";
+import Link from "next/link";
 
 interface PostData {
   id: string;
   authorName: string;
+  username: string;
   bookName: string;
   bookId: string;
   coverImage: string;
@@ -133,14 +135,16 @@ export default function UserProfile() {
                         className="relative group flex flex-row "
                       >
                         {post.coverImage && (
-                          <Image
-                            src={post.coverImage}
-                            alt={`Cover image for ${post.bookName}`}
-                            width={60}
-                            height={60}
-                            sizes="(max-width: 414px) 200px, (max-width: 1100px) 120px, 120px"
-                            className="w-full h-auto rounded-lg shadow-md group-hover:scale-105 transition-transform duration-200 ease-in-out cursor-pointer border border-zinc-700"
-                          />
+                          <Link href={`/book/${post.bookId}`} key={post.id}>
+                            <Image
+                              src={post.coverImage}
+                              alt={`Cover image for ${post.bookName}`}
+                              width={60}
+                              height={60}
+                              sizes="(max-width: 414px) 200px, (max-width: 1100px) 120px, 120px"
+                              className="w-full h-auto rounded-lg shadow-md group-hover:scale-105 transition-transform duration-200 ease-in-out cursor-pointer border border-zinc-700"
+                            />
+                          </Link>
                         )}
                       </div>
                     ))}
@@ -170,6 +174,7 @@ export default function UserProfile() {
                     <div className="sm:w-2/3 h-full flex justify-center items-center p-5">
                       <Post
                         id={postData.id}
+                        username={userData.username}
                         createdAt={formatDistanceToNow(postData.createdAt, {
                           addSuffix: true,
                           locale: ptBR,

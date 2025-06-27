@@ -56,4 +56,36 @@ router.get("/", async (req, res) => {
   }
 });
 
+router.get("/:bookId", async (req, res) => {
+  const { bookId } = req.params;
+
+  try {
+    const posts = await prisma.post.findMany({
+      where: {
+        bookId: bookId,
+      },
+      select: {
+        authorName: true,
+        bookId: true,
+        bookName: true,
+        createdAt: true,
+        coverImage: true,
+        id: true,
+        quote: true,
+        owner: {
+          select: {
+            id: true,
+            username: true,
+          },
+        },
+      },
+    });
+    console.log(posts);
+    return res.status(200).json(posts);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Erro interno do servidor." });
+  }
+});
+
 export default router;
