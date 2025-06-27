@@ -3,10 +3,10 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 const router = Router();
+const googleBooksApiKey = process.env.GOOGLE_BOOKS_API_KEY;
 
 router.get("/books-search", async (req, res) => {
   const { q } = req.query;
-  const googleBooksApiKey = process.env.GOOGLE_BOOKS_API_KEY;
 
   if (!q) {
     return res
@@ -34,6 +34,20 @@ router.get("/books-search", async (req, res) => {
     res
       .status(500)
       .json({ error: "Erro interno do servidor ao buscar livros" });
+  }
+});
+
+router.get("/book/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    const response = await fetch(
+      `https://www.googleapis.com/books/v1/volumes/${id}?key=${googleBooksApiKey}`
+    );
+    const data = await response.json();
+    console.log(data);
+    return res.status(200).json(data);
+  } catch (err) {
+    res.status(500).json(err);
   }
 });
 

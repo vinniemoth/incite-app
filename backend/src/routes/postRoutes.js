@@ -8,7 +8,7 @@ const prisma = new PrismaClient();
 router.use(authMiddleware);
 
 router.post("/", async (req, res) => {
-  const { author, bookTitle, bookCover, quote } = req.body;
+  const { author, bookTitle, bookId, bookCover, quote } = req.body;
   if (!quote || !author || !bookTitle) {
     return res.status(400).json({ message: "Todos os campos obrigatórios" });
   }
@@ -18,6 +18,7 @@ router.post("/", async (req, res) => {
         bookName: bookTitle,
         authorName: author,
         quote,
+        bookId,
         coverImage: bookCover,
         owner: {
           connect: {

@@ -53,10 +53,23 @@ export const moduleApi = {
     }
   },
 
+  fetchBookInfo: async (id: string) => {
+    const response = await fetch(`http://localhost:5000/api/book/${id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const json = await response.json();
+    console.log(json);
+    return json;
+  },
+
   createPost: async (
     quote: string,
     author: string | null,
     bookTitle: string | null,
+    bookId: string | null,
     bookCover: string | null
   ) => {
     const token = localStorage.getItem("authToken");
@@ -67,7 +80,7 @@ export const moduleApi = {
         Authorization: `${token}`,
       },
 
-      body: JSON.stringify({ quote, author, bookTitle, bookCover }),
+      body: JSON.stringify({ quote, author, bookTitle, bookId, bookCover }),
     });
     return response.json;
   },

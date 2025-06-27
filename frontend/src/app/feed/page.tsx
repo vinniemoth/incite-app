@@ -17,6 +17,7 @@ import { Keyboard, Mousewheel, FreeMode } from "swiper/modules";
 interface PostData {
   id: string;
   bookName: string;
+  bookId: string;
   authorName: string;
   coverImage: string | null;
   createdAt: string;
@@ -54,6 +55,7 @@ export default function Feed() {
           }),
           coverImage: post.coverImage,
           bookName: post.bookName,
+          bookId: post.bookId,
           authorName: post.authorName,
           quote: post.quote,
           owner: post.owner,

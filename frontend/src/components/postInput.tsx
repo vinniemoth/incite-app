@@ -18,6 +18,7 @@ export default function PostInput() {
 
   const [finalAuthor, setFinalAuthor] = useState<string | null>(null);
   const [finalBookTitle, setFinalBookTitle] = useState<string | null>(null);
+  const [finalBookId, setFinalBookId] = useState<string | null>(null);
   const [selectedBookCover, setSelectedBookCover] = useState<string | null>(
     null
   );
@@ -103,7 +104,7 @@ export default function PostInput() {
     return () => {
       clearTimeout(handler);
     };
-  }, [bookNameSearchTerm, finalAuthor, selectedFullBook]);
+  }, [bookNameSearchTerm, finalAuthor, selectedFullBook, finalBookId]);
 
   const handleShareQuote = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -125,6 +126,7 @@ export default function PostInput() {
       quote: quoteContent,
       author: finalAuthor,
       bookTitle: finalBookTitle || "Not specified",
+      bookId: finalBookId || "Not specified",
       coverImage: selectedBookCover || "Not available",
       fullBookData: selectedFullBook,
     });
@@ -133,6 +135,7 @@ export default function PostInput() {
       quoteContent,
       finalAuthor,
       finalBookTitle,
+      finalBookId,
       selectedBookCover
     );
     alert("Quote shared successfully!");
@@ -144,6 +147,7 @@ export default function PostInput() {
     setSuggestedBooksByAuthor([]);
     setFinalAuthor(null);
     setFinalBookTitle(null);
+    setFinalBookId(null);
     setSelectedBookCover(null);
     setSelectedFullBook(null);
     return json;
@@ -155,6 +159,7 @@ export default function PostInput() {
     setSuggestedAuthors([]);
     setBookNameSearchTerm("");
     setFinalBookTitle(null);
+    setFinalBookId(null);
     setSelectedBookCover(null);
     setSelectedFullBook(null);
     setSuggestedBooksByAuthor([]);
@@ -165,7 +170,9 @@ export default function PostInput() {
     const title = book.volumeInfo?.title || "Título Desconhecido";
     setBookNameSearchTerm(title);
     setFinalBookTitle(title);
+    setFinalBookId(book.id);
     setSelectedFullBook(book);
+    console.log(finalBookId);
 
     let finalCoverUrl: string | null = null;
 

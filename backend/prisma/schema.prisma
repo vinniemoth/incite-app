@@ -32,6 +32,7 @@ model UserFollows {
 model Post {
   id          String          @id @default(uuid())
   bookName    String
+  bookId      String          @unique
   authorName  String
   coverImage  String          
   quote       String          @db.Text

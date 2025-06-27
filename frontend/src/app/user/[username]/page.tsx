@@ -16,6 +16,7 @@ interface PostData {
   id: string;
   authorName: string;
   bookName: string;
+  bookId: string;
   coverImage: string;
   createdAt: string;
   quote: string;
@@ -175,6 +176,7 @@ export default function UserProfile() {
                         })}
                         coverImage={postData.coverImage}
                         bookName={postData.bookName}
+                        bookId={postData.bookId}
                         authorName={postData.authorName}
                         quote={postData.quote}
                       />
