@@ -34,14 +34,29 @@ router.post("/", async (req, res) => {
 });
 
 router.get("/", async (req, res) => {
+  const followerUsersRecords = await prisma.userFollows.findMany({
+    where: {
+      followerId: res.user_id,
+    },
+    select: {
+      followingId: true,
+    },
+  });
+
+  const followingIds = followerUsersRecords.map((record) => record.followingId);
+
   try {
     const posts = await prisma.post.findMany({
+      where: {
+        ownerId: {
+          in: followingIds,
+        },
+      },
       include: {
         owner: {
           select: {
             id: true,
             username: true,
-            // avatarUrl: true
           },
         },
       },
