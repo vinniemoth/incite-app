@@ -11,12 +11,14 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import { Keyboard, Mousewheel, FreeMode, Pagination } from "swiper/modules";
 import Post from "@/components/post";
+import { FaCircleArrowDown } from "react-icons/fa6";
+import BackButton from "@/components/backButton";
 
 interface BookInfo {
   id: string;
   volumeInfo: {
     title: string;
-    authors: [];
+    authors: string[];
     publisher: string;
     publishedDate: string;
     description: string;
@@ -35,7 +37,7 @@ interface Post {
   id: string;
   username: string;
   quote: string;
-  authorName: string;
+  authorsName: string[];
   bookName: string;
   bookId: string;
   coverImage: string;
@@ -116,8 +118,8 @@ export default function BookPage() {
                 modules={[Keyboard, Mousewheel, FreeMode, Pagination]}
                 className="mySwiperHorizontal w-full h-full"
               >
-                <SwiperSlide className="flex items-center justify-center p-4">
-                  <div className="flex flex-col items-center gap-6 text-center justify-center">
+                <SwiperSlide className="flex items-center justify-around p-4">
+                  <div className="flex h-full flex-col items-center gap-6 text-center justify-center">
                     {book.volumeInfo.imageLinks?.large ||
                     book.volumeInfo.imageLinks?.medium ? (
                       <Image
@@ -126,8 +128,8 @@ export default function BookPage() {
                           book.volumeInfo.imageLinks.medium!
                         }
                         alt={`Capa do livro ${book.volumeInfo.title}`}
-                        width={300}
-                        height={450}
+                        width={200}
+                        height={200}
                         className="rounded-lg shadow-2xl border-4 border-purple-500 object-cover"
                         priority
                       />
@@ -148,6 +150,10 @@ export default function BookPage() {
                         ? book.volumeInfo.authors.join(", ")
                         : book.volumeInfo.authors || "Autor Desconhecido"}
                     </p>
+                    <FaCircleArrowDown
+                      size={25}
+                      className="cursor-pointer hover:text-zinc-400 mt-4 animate-bounce"
+                    />
                   </div>
                 </SwiperSlide>
 
@@ -209,7 +215,7 @@ export default function BookPage() {
                     coverImage={postData.coverImage}
                     bookName={postData.bookName}
                     bookId={postData.bookId}
-                    authorName={postData.authorName}
+                    authorsName={postData.authorsName}
                     quote={postData.quote}
                   />
                 </div>
@@ -224,6 +230,7 @@ export default function BookPage() {
           )}
         </Swiper>
       </div>
+      <BackButton></BackButton>
     </div>
   );
 }

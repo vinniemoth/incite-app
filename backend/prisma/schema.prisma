@@ -33,7 +33,7 @@ model Post {
   id          String          @id @default(uuid())
   bookName    String
   bookId      String          
-  authorName  String
+  authorsName String[]
   coverImage  String          
   quote       String          @db.Text
   createdAt   DateTime        @default(now())

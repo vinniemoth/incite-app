@@ -12,7 +12,7 @@ const PORT = 5000;
 app.use(cors());
 app.use(express.json());
 app.use("/auth", authRoutes);
-app.use("/api", apiRoutes);
+app.use("/api", authMiddleware, apiRoutes);
 app.use("/post", authMiddleware, postRoutes);
 
 app.get("/", (req, res) => {

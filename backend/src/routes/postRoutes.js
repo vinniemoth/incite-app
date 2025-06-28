@@ -16,7 +16,7 @@ router.post("/", async (req, res) => {
     const post = await prisma.post.create({
       data: {
         bookName: bookTitle,
-        authorName: author,
+        authorsName: author,
         quote,
         bookId,
         coverImage: bookCover,
@@ -65,7 +65,7 @@ router.get("/:bookId", async (req, res) => {
         bookId: bookId,
       },
       select: {
-        authorName: true,
+        authorsName: true,
         bookId: true,
         bookName: true,
         createdAt: true,

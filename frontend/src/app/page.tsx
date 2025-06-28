@@ -1,19 +1,7 @@
-"use client";
-
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 
 export default function Home() {
-  const router = useRouter();
-
-  useEffect(() => {
-    if (localStorage.getItem("authToken")) {
-      router.push("/feed");
-    }
-  }, []);
-
   return (
     <>
       <div className="w-screen h-screen flex flex-col items-center justify-center gap-10 home-gradient">

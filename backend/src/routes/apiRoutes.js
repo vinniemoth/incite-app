@@ -116,4 +116,54 @@ router.get("/users/profile", async (req, res) => {
     return res.status(500).json({ message: "Erro interno do servidor", err });
   }
 });
+
+router.get("/follow/:userId", async (req, res) => {
+  const { userId } = req.params;
+  try {
+    const following = await prisma.userFollows.findUnique({
+      where: {
+        followerId_followingId: {
+          followerId: res.user_id,
+          followingId: userId,
+        },
+      },
+    });
+    return res.status(200).json({
+      following: following ? true : false,
+    });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ message: "Erro interno do servidor", err });
+  }
+});
+
+router.post("/follow/:userId", async (req, res) => {
+  const { userId } = req.params;
+  const { isFollower } = req.body;
+
+  if (!isFollower) {
+    const newFollow = await prisma.userFollows.create({
+      data: {
+        followerId: res.user_id,
+        followingId: userId,
+      },
+    });
+    return res.status(200).json({
+      following: newFollow ? true : false,
+    });
+  } else if (isFollower) {
+    const removeFollow = await prisma.userFollows.delete({
+      where: {
+        followerId_followingId: {
+          followerId: res.user_id,
+          followingId: userId,
+        },
+      },
+    });
+    return res.status(200).json({
+      following: removeFollow ? false : true,
+    });
+  }
+});
+
 export default router;

@@ -80,7 +80,6 @@ export default function PostInput() {
     ) {
       setSuggestedBooksByAuthor([]);
       setLoadingSuggestions(false);
-      console.log(selectedFullBook);
       return;
     }
 
@@ -131,9 +130,11 @@ export default function PostInput() {
       fullBookData: selectedFullBook,
     });
 
+    const formattedData = await moduleApi.fetchBookInfo(finalBookId!);
+
     const json = await moduleApi.createPost(
       quoteContent,
-      finalAuthor,
+      formattedData.volumeInfo.authors,
       finalBookTitle,
       finalBookId,
       selectedBookCover
@@ -198,7 +199,7 @@ export default function PostInput() {
     }
   };
   return (
-    <div className="flex flex-col w-full items-center py-8">
+    <div className="flex flex-col w-full items-center py-8 px-4">
       <h2 className="font-ultra text-4xl text-white mb-6 text-center">
         Want to share a quote?
       </h2>

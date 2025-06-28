@@ -12,10 +12,12 @@ import { formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import Reactions from "@/components/reactions";
 import Link from "next/link";
+import BackButton from "@/components/backButton";
+import FollowComponent from "@/components/followComponent";
 
 interface PostData {
   id: string;
-  authorName: string;
+  authorsName: string[];
   username: string;
   bookName: string;
   bookId: string;
@@ -124,6 +126,7 @@ export default function UserProfile() {
                   {userData.username}
                 </h1>
                 <p className="text-zinc-400 text-lg mt-2">{userData.email}</p>
+                <FollowComponent userId={userData.id} />
               </div>
               <div className="flex flex-col gap-4 mt-8 items-center font-ultra">
                 <h2 className="text-3xl text-purple-300">Recently Quoted</h2>
@@ -182,7 +185,7 @@ export default function UserProfile() {
                         coverImage={postData.coverImage}
                         bookName={postData.bookName}
                         bookId={postData.bookId}
-                        authorName={postData.authorName}
+                        authorsName={postData.authorsName}
                         quote={postData.quote}
                       />
                     </div>
@@ -192,6 +195,7 @@ export default function UserProfile() {
             : null}
         </Swiper>
       </div>
+      <BackButton></BackButton>
     </div>
   );
 }

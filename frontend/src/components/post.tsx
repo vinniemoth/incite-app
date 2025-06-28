@@ -8,7 +8,7 @@ import Link from "next/link";
 
 interface PostProps {
   id: string;
-  authorName: string;
+  authorsName: string[];
   username: string;
   bookName: string;
   bookId: string;
@@ -18,6 +18,8 @@ interface PostProps {
 }
 
 export default function Post(Props: PostProps) {
+  const displayAuthors = Props.authorsName.join(", ");
+
   const router = useRouter();
 
   return (
@@ -53,7 +55,7 @@ export default function Post(Props: PostProps) {
             <h2 className="text-xl font-bold text-zinc-100">
               {Props.bookName}
             </h2>
-            <p className="text-md text-purple-400">{Props.authorName}</p>
+            <p className="text-md text-purple-400">{displayAuthors}</p>
           </div>
 
           <div className="mb-4 text-zinc-300">

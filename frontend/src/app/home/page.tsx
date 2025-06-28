@@ -1,4 +1,3 @@
-// src/app/home/page.tsx
 "use client";
 import PostInput from "@/components/postInput";
 import { FaMagnifyingGlass, FaCircleArrowDown } from "react-icons/fa6";
@@ -15,12 +14,6 @@ export default function Home() {
   const [suggestedUsers, setSuggestedUsers] = useState<any[]>([]);
   const [loadingSuggestions, setLoadingSuggestions] = useState(false);
   const [suggestionError, setSuggestionError] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (!localStorage.getItem("authToken")) {
-      router.push("/");
-    }
-  }, [router]);
 
   useEffect(() => {
     if (search.trim().length < 3) {

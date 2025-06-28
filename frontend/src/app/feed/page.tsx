@@ -13,13 +13,14 @@ import { ptBR } from "date-fns/locale";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import { Keyboard, Mousewheel, FreeMode } from "swiper/modules";
+import BackButton from "@/components/backButton";
 
 interface PostData {
   id: string;
   bookName: string;
   bookId: string;
   username: string;
-  authorName: string;
+  authorsName: string[];
   coverImage: string | null;
   createdAt: string;
   quote: string;
@@ -57,7 +58,7 @@ export default function Feed() {
           coverImage: post.coverImage,
           bookName: post.bookName,
           bookId: post.bookId,
-          authorName: post.authorName,
+          authorsName: post.authorsName,
           quote: post.quote,
           owner: post.owner,
           ownerId: post.ownerId,
@@ -80,7 +81,7 @@ export default function Feed() {
   }, []);
 
   return (
-    <div className="w-screen h-screen flex flex-col items-center justify-center overflow-hidden bg-black text-white">
+    <div className="w-screen h-screen flex flex-col items-center justify-center overflow-hidden bg-zinc-900 text-white">
       {" "}
       {loading && <p className="text-lg mt-8">Carregando citações...</p>}
       {error && <p className="text-red-400 text-lg mt-8">{error}</p>}
@@ -97,25 +98,21 @@ export default function Feed() {
           mousewheel={true}
           keyboard={{ enabled: true }}
           modules={[Keyboard, Mousewheel, FreeMode]}
-          className="mySwiper w-2/3 h-full"
+          className="mySwiper w-full h-full flex items-center justify-center"
         >
           {posts.map((postData) => (
             <SwiperSlide
               key={postData.id}
-              className="w-full h-full flex justify-center items-center"
+              className="w-full h-full flex justify-center items-center p-4"
             >
-              <div className="h-full flex items-center">
+              <div className="flex items-center mx-auto h-full">
                 <Post {...postData} />
               </div>
             </SwiperSlide>
           ))}
         </Swiper>
       )}
-      <FaLeftLong
-        onClick={() => router.push("/home")}
-        size={50}
-        className="absolute top-5 left-5 bg-zinc-800 p-3 rounded-xl cursor-pointer hover:bg-zinc-700 z-50"
-      ></FaLeftLong>
+      <BackButton />
     </div>
   );
 }

@@ -28,6 +28,7 @@ export const moduleApi = {
   },
 
   fetchBooks: async (q: string) => {
+    const token = localStorage.getItem("authToken");
     try {
       const response = await fetch(
         `http://localhost:5000/api/books-search?q=${encodeURIComponent(q)}`,
@@ -35,6 +36,7 @@ export const moduleApi = {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `${token}`,
           },
         }
       );
@@ -59,6 +61,7 @@ export const moduleApi = {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `${token}`,
       },
     });
     const json = await response.json();
@@ -147,6 +150,34 @@ export const moduleApi = {
         Authorization: `${token}`,
       },
     });
+    return response.json();
+  },
+
+  // Follow Requests:
+
+  fetchFollow: async (userId: string) => {
+    const token = localStorage.getItem("authToken");
+    const response = await fetch(`http://localhost:5000/api/follow/${userId}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `${token}`,
+      },
+    });
+    return await response.json();
+  },
+
+  setFollow: async (isFollower: boolean, userId: string) => {
+    const token = localStorage.getItem("authToken");
+    const response = await fetch(`http://localhost:5000/api/follow/${userId}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `${token}`,
+      },
+      body: JSON.stringify({ isFollower }),
+    });
+    console.log(response);
     return response.json();
   },
 };
