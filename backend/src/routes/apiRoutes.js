@@ -23,14 +23,12 @@ router.get("/books-search", async (req, res) => {
     );
     if (!response.ok) {
       const errorData = await response.json();
-      console.error("Erro na API do Google Books:", errorData);
       return res.status(response.status).json(errorData);
     }
 
     const data = await response.json();
     return res.status(200).json(data);
   } catch (err) {
-    console.error("Erro ao buscar livros", err);
     res
       .status(500)
       .json({ error: "Erro interno do servidor ao buscar livros" });
@@ -76,9 +74,7 @@ router.get("/users/search", async (req, res) => {
       return res.status(404).json({ message: "Usuário não encontrado" });
     }
     return res.status(200).json(users);
-  } catch (err) {
-    console.error(err);
-  }
+  } catch (err) {}
 });
 
 router.get("/users/profile", async (req, res) => {
@@ -112,7 +108,6 @@ router.get("/users/profile", async (req, res) => {
     }
     return res.status(200).json(user);
   } catch (err) {
-    console.error(err);
     return res.status(500).json({ message: "Erro interno do servidor", err });
   }
 });
@@ -132,7 +127,6 @@ router.get("/follow/:userId", async (req, res) => {
       following: following ? true : false,
     });
   } catch (err) {
-    console.error(err);
     return res.status(500).json({ message: "Erro interno do servidor", err });
   }
 });

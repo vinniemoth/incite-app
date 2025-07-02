@@ -45,7 +45,6 @@ export default function Feed() {
 
     try {
       const fetchedPosts: PostData[] = await moduleApi.fetchPosts();
-      console.log("Posts recebidos da API:", fetchedPosts);
 
       const formattedPosts = fetchedPosts.map((post) => {
         return {
@@ -67,7 +66,6 @@ export default function Feed() {
 
       setPosts(formattedPosts);
     } catch (err: any) {
-      console.error("Erro ao buscar posts:", err);
       setError(
         "Não foi possível carregar as citações. Por favor, tente novamente mais tarde."
       );

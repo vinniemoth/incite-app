@@ -9,10 +9,9 @@ export const moduleApi = {
     });
     try {
       let json = await response.json();
-      console.log(json);
       return json;
     } catch (err) {
-      console.error("User creation failed.", err);
+      throw new Error("Failed to create account.");
     }
   },
 
@@ -42,15 +41,12 @@ export const moduleApi = {
       );
       if (!response.ok) {
         const errorData = await response.json();
-        console.error("Error fetching books:", errorData);
         throw new Error(errorData.message || "Failed to fetch books.");
       }
 
       const json = await response.json();
-      console.log("List of books:", json);
       return json;
     } catch (err) {
-      console.error("Error fetching books:", err);
       throw new Error("Failed to fetch books.");
     }
   },
@@ -177,7 +173,33 @@ export const moduleApi = {
       },
       body: JSON.stringify({ isFollower }),
     });
-    console.log(response);
+    return response.json();
+  },
+
+  // Reaction Request
+
+  postReact: async (postId: string, type: string | null) => {
+    const token = localStorage.getItem("authToken");
+    const response = await fetch(`http://localhost:5000/post/react/${postId}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `${token}`,
+      },
+      body: JSON.stringify({ type }),
+    });
+    return response.json();
+  },
+
+  fetchReactions: async (postId: string) => {
+    const token = localStorage.getItem("authToken");
+    const response = await fetch(`http://localhost:5000/post/react/${postId}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `${token}`,
+      },
+    });
     return response.json();
   },
 };

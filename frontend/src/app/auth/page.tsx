@@ -58,11 +58,11 @@ export default function Page() {
   };
 
   return (
-    <div className="flex items-center h-screen justify-center">
-      <div className="bg-zinc-800 items-center flex flex-col m-20 gap-5 w-2/3 p-5 rounded">
-        <h1 className="font-ultra text-2xl text-center">
-          {mode === "login" ? "Welcome back" : "Create account"}
-        </h1>
+    <div className="flex flex-col items-center h-screen justify-center gap-10">
+      <h1 className="font-ultra text-4xl text-center">
+        {mode === "login" ? "Welcome back" : "Create account"}
+      </h1>
+      <div className=" items-center flex flex-col gap-5 w-2/3 p-10 rounded">
         <form
           onSubmit={mode === "login" ? login : register}
           action=""
@@ -72,7 +72,7 @@ export default function Page() {
             <div className="relative sm:w-3/4">
               <FaUser className="absolute left-3 top-3" size={15} />
               <input
-                className="w-full pl-8 h-10 rounded border-1 border-white mx-auto focus:outline-none"
+                className="w-full pl-8 bg-zinc-900 h-10 rounded border-1 border-white mx-auto focus:outline-none focus:bg-zinc-800"
                 type="text"
                 placeholder="Username"
                 value={username}
@@ -83,7 +83,7 @@ export default function Page() {
           <div className="relative sm:w-3/4">
             <FaEnvelope className="absolute left-3 top-3" size={15} />
             <input
-              className="w-full pl-8 h-10 rounded border-1 border-white mx-auto focus:outline-none"
+              className="w-full pl-8 h-10 bg-zinc-900 rounded border-1 border-white mx-auto focus:outline-none focus:bg-zinc-800"
               type="text"
               placeholder="Email"
               value={email}
@@ -93,7 +93,7 @@ export default function Page() {
           <div className="relative sm:w-3/4">
             <FaLock className="absolute left-2 top-3" size={15} />
             <input
-              className="w-full pl-8 h-10 rounded border-1 border-white focus:outline-none"
+              className="w-full pl-8 h-10 bg-zinc-900 rounded border-1 border-white focus:outline-none focus:bg-zinc-800"
               type="password"
               placeholder="Password"
               value={password}

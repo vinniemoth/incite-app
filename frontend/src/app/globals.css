@@ -1,4 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Ultra&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
 @import "tailwindcss";
 
 :root {
@@ -28,5 +29,6 @@ body {
 
 @theme {
   --font-ultra: "Ultra", serif;
+  --font-roboto: "Roboto", sans-serif;
   --home-gradient: "background: linear-gradient(0deg,rgba(255, 255, 255, 1) 0%, rgba(136, 77, 38, 1) 100%)";
 }
