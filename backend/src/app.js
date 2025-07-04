@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 import { PrismaClient } from "@prisma/client";
-import bcrypt from "bcryptjs";
+import BcryptCryptoClient from "./services/cryptoclient.service.js";
 
 // Service Module
 import { AuthServices } from "./services/index.services.js";
@@ -18,8 +18,9 @@ const app = express();
 
 const PORT = 5000;
 const prisma = new PrismaClient();
+const cryptoClient = new BcryptCryptoClient();
 
-const authServices = new AuthServices(prisma, bcrypt);
+const authServices = new AuthServices(prisma, cryptoClient);
 
 app.use(cors());
 app.use(express.json());
