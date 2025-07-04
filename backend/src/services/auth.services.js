@@ -11,7 +11,7 @@ class AuthServices {
       return null;
     }
 
-    const hashedPassword = await this.cryptoClient.hash(password);
+    const hashedPassword = this.cryptoClient.hash(password);
 
     try {
       const newUser = await this.dbClient.user.create({
@@ -43,10 +43,7 @@ class AuthServices {
       return null;
     }
 
-    const passwordIsValid = await this.cryptoClient.compare(
-      password,
-      user.password
-    );
+    const passwordIsValid = this.cryptoClient.compare(password, user.password);
 
     if (!passwordIsValid) {
       return null;
@@ -60,8 +57,7 @@ class AuthServices {
     const token = jwt.sign(tokenPayload, process.env.JWT_SECRET, {
       expiresIn: "1h",
     });
-
-    return { user: { id: user.id, email: user.email }, token };
+    return { user, token };
   }
 }
 

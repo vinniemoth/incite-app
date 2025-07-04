@@ -24,8 +24,14 @@ function setupAuthRoutes(authServices) {
   router.post("/login", async (req, res) => {
     const { email, password } = req.body;
     try {
-      const user = authServices.login(email, password);
-      res.status(200).json(user);
+      const user = await authServices.login(email, password);
+      res.status(200).json({
+        user: {
+          id: user.user.id,
+          email: user.user.email,
+        },
+        token: user.token,
+      });
     } catch (err) {
       return res.status(500).json({ message: "Erro interno do servidor." });
     }
