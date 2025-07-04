@@ -1,9 +1,9 @@
-import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
 class AuthServices {
-  constructor(dbClient) {
+  constructor(dbClient, cryptoClient) {
     this.dbClient = dbClient;
+    this.cryptoClient = cryptoClient;
   }
 
   async createAccount(username, email, password) {
@@ -11,7 +11,7 @@ class AuthServices {
       return null;
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await this.cryptoClient.hash(password, 10);
 
     try {
       const newUser = await this.dbClient.user.create({
@@ -43,7 +43,10 @@ class AuthServices {
       return null;
     }
 
-    const passwordIsValid = await bcrypt.compare(password, user.password);
+    const passwordIsValid = await this.cryptoClient.compare(
+      password,
+      user.password
+    );
 
     if (!passwordIsValid) {
       return null;
