@@ -1,9 +1,8 @@
-import jwt from "jsonwebtoken";
-
 class AuthServices {
-  constructor(dbClient, cryptoClient) {
+  constructor(dbClient, cryptoClient, jwtManager) {
     this.dbClient = dbClient;
     this.cryptoClient = cryptoClient;
+    this.jwtManager = jwtManager;
   }
 
   async createAccount(username, email, password) {
@@ -49,14 +48,8 @@ class AuthServices {
       return null;
     }
 
-    const tokenPayload = {
-      id: user.id,
-      email: user.email,
-    };
+    const token = this.jwtManager.sign(user.id, user.email);
 
-    const token = jwt.sign(tokenPayload, process.env.JWT_SECRET, {
-      expiresIn: "1h",
-    });
     return { user, token };
   }
 }
