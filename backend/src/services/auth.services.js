@@ -11,7 +11,7 @@ class AuthServices {
       return null;
     }
 
-    const hashedPassword = await this.cryptoClient.hash(password, 10);
+    const hashedPassword = await this.cryptoClient.hash(password);
 
     try {
       const newUser = await this.dbClient.user.create({
