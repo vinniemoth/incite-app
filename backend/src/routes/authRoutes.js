@@ -6,8 +6,16 @@ function setupAuthRoutes(authServices) {
   router.post("/", async (req, res) => {
     const { username, email, password } = req.body;
     try {
-      const newUser = authServices.createAccount(username, email, password);
-      res.status(200).json(newUser);
+      const newUser = await authServices.createAccount(
+        username,
+        email,
+        password
+      );
+      res.status(200).json({
+        id: newUser.id,
+        username: newUser.username,
+        email: newUser.email,
+      });
     } catch (err) {
       return res.status(500).json({ message: "Erro interno do servidor." });
     }

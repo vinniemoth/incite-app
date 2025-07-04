@@ -1,3 +1,3 @@
-import AuthServices from "./auth.services";
+import AuthServices from "./auth.services.js";
 
 export { AuthServices };

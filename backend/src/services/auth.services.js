@@ -21,6 +21,7 @@ class AuthServices {
           password: hashedPassword,
         },
       });
+
       return newUser;
     } catch (err) {
       throw new Error(err);
