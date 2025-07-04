@@ -13,7 +13,7 @@ class JwtManager {
   }
 
   verify(token) {
-    jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+    return jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
       if (err) {
         return null;
       }

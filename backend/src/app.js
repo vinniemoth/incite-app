@@ -29,7 +29,7 @@ app.use(cors());
 app.use(express.json());
 
 // Middleware with DI
-const middleware = makeAuthMiddleware(jwtManager);
+const authMiddleware = makeAuthMiddleware(jwtManager);
 
 // Services with DI
 const authServices = new AuthServices(prisma, cryptoClient, jwtManager);
@@ -38,8 +38,8 @@ const authServices = new AuthServices(prisma, cryptoClient, jwtManager);
 app.use("/auth", setupAuthRoutes(authServices));
 
 // Other Routes
-app.use("/api", middleware, apiRoutes);
-app.use("/post", middleware, postRoutes);
+app.use("/api", authMiddleware, apiRoutes);
+app.use("/post", authMiddleware, postRoutes);
 
 app.get("/", (req, res) => {
   res.send("Hello World");
