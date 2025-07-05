@@ -1,6 +1,6 @@
 import { Router } from "express";
 
-function setupApiRoutes(googleBooks) {
+function setupApiRoutes(googleBooks, prisma) {
   const router = Router();
 
   router.get("/books-search", async (req, res) => {
@@ -26,35 +26,6 @@ function setupApiRoutes(googleBooks) {
     }
   });
 
-  router.get("/users/search", async (req, res) => {
-    const { username } = req.query;
-    if (!username) {
-      return res
-        .status(400)
-        .json({ error: "O parâmetro 'username' é obrigatório" });
-    }
-    try {
-      const users = await prisma.user.findMany({
-        where: {
-          username: {
-            contains: username,
-            mode: "insensitive",
-          },
-        },
-        select: {
-          id: true,
-          username: true,
-          email: true,
-          // avatarUrl: true,
-        },
-      });
-      if (users.length === 0) {
-        return res.status(404).json({ message: "Usuário não encontrado" });
-      }
-      return res.status(200).json(users);
-    } catch (err) {}
-  });
-
   router.get("/users/profile", async (req, res) => {
     const { username } = req.query;
 
@@ -62,30 +33,6 @@ function setupApiRoutes(googleBooks) {
       return res
         .status(400)
         .json({ message: "O parâmetro 'username' é obrigatório" });
-    }
-
-    try {
-      const user = await prisma.user.findUnique({
-        where: {
-          username: username,
-        },
-        select: {
-          id: true,
-          username: true,
-          email: true,
-          posts: {
-            orderBy: {
-              createdAt: "desc",
-            },
-          },
-        },
-      });
-      if (!user) {
-        return res.status(404).json({ message: "Usuário não encontrado" });
-      }
-      return res.status(200).json(user);
-    } catch (err) {
-      return res.status(500).json({ message: "Erro interno do servidor", err });
     }
   });
 

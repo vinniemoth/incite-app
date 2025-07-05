@@ -9,6 +9,7 @@ import makeAuthMiddleware from "./middleware/Auth.middleware.js";
 
 // Service Module
 import { AuthServices } from "./services/index.services.js";
+import GoogleBooksService from "./services/googleBooks.service.js";
 
 // Routes with DI implemented
 import setupAuthRoutes from "./routes/authRoutes.js";
@@ -16,7 +17,8 @@ import setupApiRoutes from "./routes/apiRoutes.js";
 
 // Other Routes
 import postRoutes from "./routes/postRoutes.js";
-import GoogleBooksService from "./services/googleBooks.service.js";
+import setupUserRoutes from "./routes/userRoutes.js";
+import UserService from "./services/user.service.js";
 
 const app = express();
 const PORT = 5000;
@@ -27,6 +29,7 @@ const cryptoClient = new BcryptCryptoClient();
 const jwtManager = new JwtManager();
 const googleBooks = new GoogleBooksService();
 const authServices = new AuthServices(prisma, cryptoClient, jwtManager);
+const userService = new UserService(prisma);
 
 app.use(cors());
 app.use(express.json());
@@ -38,7 +41,8 @@ const authMiddleware = makeAuthMiddleware(jwtManager);
 
 // Routes with DI
 app.use("/auth", setupAuthRoutes(authServices));
-app.use("/api", authMiddleware, setupApiRoutes(googleBooks));
+app.use("/api", authMiddleware, setupApiRoutes(googleBooks, prisma));
+app.use("/user", authMiddleware, setupUserRoutes(userService));
 
 // Other Routes
 app.use("/post", authMiddleware, postRoutes);
