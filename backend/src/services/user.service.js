@@ -28,6 +28,43 @@ class UserService {
       throw new Error(err);
     }
   }
-}
 
+  async fetchFollow(followerId, followingId) {
+    try {
+      const following = await this.dbClient.userFollows.findUnique({
+        where: {
+          followerId_followingId: {
+            followerId: followerId,
+            followingId: followingId,
+          },
+        },
+      });
+      return following ? true : false;
+    } catch (err) {
+      throw new Error(err);
+    }
+  }
+
+  async handleFollow(isFollower, followerId, userId) {
+    if (isFollower == false) {
+      console.log(isFollower, followerId, userId);
+      await this.dbClient.userFollows.create({
+        data: {
+          followerId,
+          followingId: userId,
+        },
+      });
+    } else if (isFollower == true) {
+      await this.dbClient.userFollows.delete({
+        where: {
+          followerId_followingId: {
+            followerId,
+            followingId: userId,
+          },
+        },
+      });
+    }
+    return !isFollower;
+  }
+}
 export default UserService;
