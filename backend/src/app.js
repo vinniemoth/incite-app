@@ -27,7 +27,10 @@ const PORT = 5000;
 const prisma = new PrismaClient();
 const cryptoClient = new BcryptCryptoClient();
 const jwtManager = new JwtManager();
-const googleBooks = new GoogleBooksService();
+const googleBooks = new GoogleBooksService(
+  "https://www.googleapis.com/books/v1/volumes",
+  process.env.GOOGLE_BOOKS_API_KEY
+);
 const authServices = new AuthServices(prisma, cryptoClient, jwtManager);
 const userService = new UserService(prisma);
 
@@ -41,7 +44,7 @@ const authMiddleware = makeAuthMiddleware(jwtManager);
 
 // Routes with DI
 app.use("/auth", setupAuthRoutes(authServices));
-app.use("/api", authMiddleware, setupApiRoutes(googleBooks, prisma));
+app.use("/api", authMiddleware, setupApiRoutes(googleBooks));
 app.use("/user", authMiddleware, setupUserRoutes(userService));
 
 // Other Routes

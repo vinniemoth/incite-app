@@ -32,6 +32,7 @@ function setupAuthRoutes(authServices) {
         },
         token: user.token,
       });
+      console.log(user);
     } catch (err) {
       return res.status(500).json({ message: "Erro interno do servidor." });
     }

@@ -6,12 +6,8 @@ function setupUserRoutes(userService) {
   router.get("/profile", async (req, res) => {
     const { username } = req.query;
 
-    try {
-      const fetchedUser = userService.fetchUser(username);
-      res.status(200).json(fetchedUser);
-    } catch (err) {
-      throw new Error(err);
-    }
+    const fetchedUser = userService.fetchUser(username);
+    res.status(200).json(fetchedUser);
   });
 
   router.get("/follow/:userId", async (req, res) => {

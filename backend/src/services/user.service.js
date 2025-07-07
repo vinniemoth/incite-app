@@ -4,66 +4,57 @@ class UserService {
   }
 
   async fetchUser(username) {
-    try {
-      const resultedUser = await this.dbClient.user.findUnique({
-        where: {
-          username: username,
-        },
-        select: {
-          id: true,
-          username: true,
-          email: true,
-          posts: {
-            orderBy: {
-              createdAt: "desc",
-            },
+    const resultedUser = await this.dbClient.user.findUnique({
+      where: {
+        username,
+      },
+      select: {
+        id: true,
+        username: true,
+        email: true,
+        posts: {
+          orderBy: {
+            createdAt: "desc",
           },
         },
-      });
-      if (!resultedUser) {
-        return null;
-      }
-      return resultedUser;
-    } catch (err) {
-      throw new Error(err);
+      },
+    });
+    if (!resultedUser) {
+      return null;
     }
+    return resultedUser;
   }
 
   async fetchFollow(followerId, followingId) {
-    try {
-      const following = await this.dbClient.userFollows.findUnique({
-        where: {
-          followerId_followingId: {
-            followerId: followerId,
-            followingId: followingId,
-          },
+    const following = await this.dbClient.userFollows.findUnique({
+      where: {
+        followerId_followingId: {
+          followerId,
+          followingId,
         },
-      });
-      return following ? true : false;
-    } catch (err) {
-      throw new Error(err);
-    }
+      },
+    });
+    return following ? true : false;
   }
 
-  async handleFollow(isFollower, followerId, userId) {
-    if (isFollower == false) {
-      console.log(isFollower, followerId, userId);
+  async handleFollow(isFollower, followerId, followingId) {
+    if (isFollower === false) {
       await this.dbClient.userFollows.create({
         data: {
           followerId,
-          followingId: userId,
+          followingId,
         },
       });
-    } else if (isFollower == true) {
-      await this.dbClient.userFollows.delete({
-        where: {
-          followerId_followingId: {
-            followerId,
-            followingId: userId,
-          },
-        },
-      });
+      return !isFollower;
     }
+    await this.dbClient.userFollows.delete({
+      where: {
+        followerId_followingId: {
+          followerId,
+          followingId,
+        },
+      },
+    });
     return !isFollower;
   }
 }
