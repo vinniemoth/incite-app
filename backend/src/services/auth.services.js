@@ -31,6 +31,7 @@ class AuthServices {
     if (!email || !password) {
       return null;
     }
+    console.log(email, password);
 
     const user = await this.dbClient.user.findUnique({
       where: {
