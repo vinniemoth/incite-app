@@ -53,7 +53,6 @@ export default function UserProfile() {
     setError(null);
     try {
       const fetchedData = await moduleApi.fetchUser(usernameFromUrl);
-      console.log(fetchedData);
       setUserData(fetchedData);
     } catch (err: any) {
       console.error("Error fetching user data:", err);
@@ -116,19 +115,20 @@ export default function UserProfile() {
         >
           <SwiperSlide key="user-profile-header flex flex-col justify-center align-center">
             <div className="flex flex-col items-center justify-center h-full p-4">
-              <div className="mb-6">
-                <div className="w-20 h-20 rounded-full bg-zinc-700 flex items-center justify-center text-3xl font-bold text-white border-2 border-purple-500">
-                  {userData.username.charAt(0).toUpperCase()}
+              <div className="flex flex-col items-center">
+                <div className="mb-6">
+                  <div className="w-20 h-20 rounded-full bg-zinc-700 flex items-center justify-center text-3xl font-bold text-white border-2 border-purple-500">
+                    {userData.username.charAt(0).toUpperCase()}
+                  </div>
+                </div>
+                <div className="text-center mb-8">
+                  <h1 className="text-5xl font-extrabold text-purple-400 break-words max-w-xs sm:max-w-md mx-auto">
+                    {userData.username}
+                  </h1>
+                  <FollowComponent userId={userData.id} />
                 </div>
               </div>
-              <div className="text-center mb-8">
-                <h1 className="text-5xl font-extrabold text-purple-400 break-words max-w-xs sm:max-w-md mx-auto">
-                  {userData.username}
-                </h1>
-                <p className="text-zinc-400 text-lg mt-2">{userData.email}</p>
-                <FollowComponent userId={userData.id} />
-              </div>
-              <div className="flex flex-col gap-4 mt-8 items-center font-ultra">
+              <div className="flex flex-col gap-4 items-center font-ultra">
                 <h2 className="text-3xl text-purple-300">Recently Quoted</h2>
                 {uniqueBookCovers.length > 0 ? (
                   <div className="flex flex-wrap justify-center gap-6 p-2 max-w-xl mx-auto">

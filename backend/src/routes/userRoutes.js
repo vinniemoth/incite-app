@@ -1,12 +1,18 @@
-import { Router } from "express";
+import express from "express";
 
 function setupUserRoutes(userService) {
-  const router = Router();
+  const router = express.Router();
+
+  router.get("/search", async (req, res) => {
+    const { username } = req.query;
+    const fetchedUser = await userService.fetchSearchUser(username);
+    res.status(200).json(fetchedUser);
+  });
 
   router.get("/profile", async (req, res) => {
     const { username } = req.query;
 
-    const fetchedUser = userService.fetchUser(username);
+    const fetchedUser = await userService.fetchUser(username);
     res.status(200).json(fetchedUser);
   });
 
@@ -15,6 +21,7 @@ function setupUserRoutes(userService) {
     const followingId = res.user_id;
 
     const fetchedFollow = await userService.fetchFollow(followingId, userId);
+    console.log(fetchedFollow);
     res.status(200).json(fetchedFollow);
   });
 
@@ -28,7 +35,7 @@ function setupUserRoutes(userService) {
       followerId,
       userId
     );
-    res.status(201).json({ followResult });
+    res.status(201).json(followResult);
   });
 
   return router;

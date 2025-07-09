@@ -3,6 +3,25 @@ class UserService {
     this.dbClient = dbClient;
   }
 
+  async fetchSearchUser(username) {
+    const resultedUser = await this.dbClient.user.findMany({
+      where: {
+        username: {
+          contains: username,
+          mode: "insensitive",
+        },
+      },
+      select: {
+        id: true,
+        username: true,
+      },
+    });
+    if (!resultedUser) {
+      return null;
+    }
+    return resultedUser;
+  }
+
   async fetchUser(username) {
     const resultedUser = await this.dbClient.user.findUnique({
       where: {
@@ -38,14 +57,14 @@ class UserService {
   }
 
   async handleFollow(isFollower, followerId, followingId) {
-    if (isFollower === false) {
+    if (!isFollower) {
       await this.dbClient.userFollows.create({
         data: {
           followerId,
           followingId,
         },
       });
-      return !isFollower;
+      return true;
     }
     await this.dbClient.userFollows.delete({
       where: {
@@ -55,7 +74,7 @@ class UserService {
         },
       },
     });
-    return !isFollower;
+    return false;
   }
 }
 export default UserService;

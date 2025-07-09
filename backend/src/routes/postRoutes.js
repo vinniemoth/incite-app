@@ -1,166 +1,89 @@
-import { Router } from "express";
-import { PrismaClient } from "@prisma/client";
-import authMiddleware from "../middleware/Auth.middleware.js";
+import express from "express";
 
-const router = Router();
-const prisma = new PrismaClient();
+function setupPostRoutes(postService) {
+  const router = express.Router();
 
-router.use(authMiddleware);
+  router.post("/", async (req, res) => {
+    const { author, bookTitle, bookId, bookCover, quote } = req.body;
+    const userId = res.user_id;
 
-router.post("/", async (req, res) => {
-  const { author, bookTitle, bookId, bookCover, quote } = req.body;
-  if (!quote || !author || !bookTitle) {
-    return res.status(400).json({ message: "Todos os campos obrigatórios" });
-  }
-  try {
-    const post = await prisma.post.create({
-      data: {
-        bookName: bookTitle,
-        authorsName: author,
-        quote,
+    if (!quote || !author || !bookTitle) {
+      return res.status(400).json({ message: "Todos os campos obrigatórios" });
+    }
+    try {
+      const newPost = await postService.createPost(
+        author,
+        bookTitle,
         bookId,
-        coverImage: bookCover,
-        owner: {
-          connect: {
-            id: res.user_id,
-          },
-        },
-      },
-    });
-    return res.status(201).json(post);
-  } catch (err) {
-    return res.status(500).json({ message: "Internal server error" });
-  }
-});
-
-router.get("/", async (req, res) => {
-  const followerUsersRecords = await prisma.userFollows.findMany({
-    where: {
-      followerId: res.user_id,
-    },
-    select: {
-      followingId: true,
-    },
+        bookCover,
+        quote,
+        userId
+      );
+      return res.status(201).json(newPost);
+    } catch (err) {
+      return res.status(500).json({ message: "Internal server error" });
+    }
   });
 
-  const followingIds = followerUsersRecords.map((record) => record.followingId);
+  router.get("/", async (req, res) => {
+    const userId = res.user_id;
+    try {
+      const post = await postService.fetchFollowerPost(userId);
+      return res.status(200).json(post);
+    } catch (err) {
+      res.status(500).json({ message: "Erro interno do servidor." });
+    }
+  });
 
-  try {
-    const post = await prisma.post.findMany({
-      where: {
-        ownerId: {
-          in: followingIds,
-        },
-      },
-      include: {
-        owner: {
-          select: {
-            id: true,
-            username: true,
-          },
-        },
-      },
-      orderBy: {
-        createdAt: "desc",
-      },
-    });
+  router.get("/:bookId", async (req, res) => {
+    const { bookId } = req.params;
 
-    return res.status(200).json(post);
-  } catch (err) {
-    res.status(500).json({ message: "Erro interno do servidor." });
-  }
-});
+    try {
+      const posts = await postService.fetchBookPost(bookId);
+      return res.status(200).json(posts);
+    } catch (err) {
+      res.status(500).json({ message: "Erro interno do servidor." });
+    }
+  });
 
-router.get("/:bookId", async (req, res) => {
-  const { bookId } = req.params;
+  router.get("/userReaction/:postId", async (req, res) => {
+    const userId = res.user_id;
+    const { postId } = req.params;
 
-  try {
-    const posts = await prisma.post.findMany({
-      where: {
-        bookId: bookId,
-      },
-      select: {
-        authorsName: true,
-        bookId: true,
-        bookName: true,
-        createdAt: true,
-        coverImage: true,
-        id: true,
-        quote: true,
-        owner: {
-          select: {
-            id: true,
-            username: true,
-          },
-        },
-      },
-      orderBy: {
-        createdAt: "desc",
-      },
-    });
-    return res.status(200).json(posts);
-  } catch (err) {
-    res.status(500).json({ message: "Erro interno do servidor." });
-  }
-});
+    const userReaction = await postService.fetchUserReaction(userId, postId);
 
-router.post("/react/:postId", async (req, res) => {
-  const { postId } = req.params;
-  const userId = res.user_id;
-  const { type } = req.body;
+    return res.status(200).json(userReaction);
+  });
 
-  if (type) {
-    const creatingReaction = await prisma.reaction.upsert({
-      where: { userId_postId: { userId, postId } },
-      update: { type: type },
-      create: { userId, postId, type },
-    });
-    res.status(201).json(creatingReaction);
-  } else {
-    await prisma.reaction.delete({
-      where: { userId_postId: { userId, postId } },
-    });
-    res.status(200).json("Reaction deleted");
-  }
-});
+  router.post("/userReaction/:postId", async (req, res) => {
+    const { type } = req.body;
+    const userId = res.user_id;
+    const { postId } = req.params;
 
-router.get("/react/:postId", async (req, res) => {
-  const { postId } = req.params;
-  try {
-    const counts = await prisma.reaction.groupBy({
-      by: ["type"],
-      where: { postId },
-      _count: { type: true },
-    });
+    try {
+      const reaction = await postService.handleReaction(type, userId, postId);
+      console.log(reaction);
+      return res.status(201).json(reaction);
+    } catch (err) {
+      res.status(500).json({ message: "Erro interno do servidor." });
+    }
+  });
 
-    const defaultCounts = {
-      LIKE: 0,
-      LOVE: 0,
-      FUNNY: 0,
-      SAD: 0,
-    };
+  router.get("/react/:postId", async (req, res) => {
+    const { postId } = req.params;
+    const userId = res.user_id;
 
-    const reactionCounts = counts.reduce(
-      (acc, current) => {
-        acc[current.type] = current._count.type;
-        return acc;
-      },
-      { ...defaultCounts }
-    );
+    try {
+      const reactions = await postService.fetchReactions(postId, userId);
+      return res.status(200).json(reactions);
+    } catch (err) {
+      res
+        .status(500)
+        .json({ message: "Erro interno do servidor. Não sei qual é", err });
+    }
+  });
 
-    const userReaction = await prisma.reaction.findUnique({
-      where: { userId_postId: { userId: res.user_id, postId } },
-      select: { type: true },
-    });
+  return router;
+}
 
-    const responseData = {
-      counts: reactionCounts,
-      userReaction: userReaction?.type || null,
-    };
-    res.status(200).json(responseData);
-  } catch (err) {
-    res.status(500).json({ message: "Erro interno do servidor.", err });
-  }
-});
-
-export default router;
+export default setupPostRoutes;
