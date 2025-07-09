@@ -5,7 +5,6 @@ function makeAuthMiddleware(jwtManager) {
       return null;
     }
     res.user_id = jwtManager.verify(token);
-    console.log(res.user_id);
     next();
   };
 }

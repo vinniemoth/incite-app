@@ -112,7 +112,7 @@ export const moduleApi = {
   fetchUsers: async (search: string) => {
     const token = localStorage.getItem("authToken");
     const response = await fetch(
-      `http://localhost:5000/api/users/search?username=${search.trim()}`,
+      `http://localhost:5000/user/search?username=${search.trim()}`,
       {
         headers: {
           "Content-Type": "application/json",
@@ -126,7 +126,7 @@ export const moduleApi = {
   fetchUser: async (username: string) => {
     const token = localStorage.getItem("authToken");
     const response = await fetch(
-      `http://localhost:5000/api/users/profile?username=${username}`,
+      `http://localhost:5000/user/profile?username=${username}`,
       {
         headers: {
           "Content-Type": "application/json",
@@ -153,41 +153,50 @@ export const moduleApi = {
 
   fetchFollow: async (userId: string) => {
     const token = localStorage.getItem("authToken");
-    const response = await fetch(`http://localhost:5000/api/follow/${userId}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `${token}`,
-      },
-    });
-    return await response.json();
+    const response = await fetch(
+      `http://localhost:5000/user/follow/${userId}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${token}`,
+        },
+      }
+    );
+    return response;
   },
 
   setFollow: async (isFollower: boolean, userId: string) => {
     const token = localStorage.getItem("authToken");
-    const response = await fetch(`http://localhost:5000/api/follow/${userId}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `${token}`,
-      },
-      body: JSON.stringify({ isFollower }),
-    });
-    return response.json();
+    const response = await fetch(
+      `http://localhost:5000/user/follow/${userId}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${token}`,
+        },
+        body: JSON.stringify({ isFollower }),
+      }
+    );
+    return response;
   },
 
   // Reaction Request
 
   postReact: async (postId: string, type: string | null) => {
     const token = localStorage.getItem("authToken");
-    const response = await fetch(`http://localhost:5000/post/react/${postId}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `${token}`,
-      },
-      body: JSON.stringify({ type }),
-    });
+    const response = await fetch(
+      `http://localhost:5000/post/userReaction/${postId}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${token}`,
+        },
+        body: JSON.stringify({ type }),
+      }
+    );
     return response.json();
   },
 

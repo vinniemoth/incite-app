@@ -1,7 +1,7 @@
-import { Router } from "express";
+import express from "express";
 
 function setupApiRoutes(bookService) {
-  const router = Router();
+  const router = express.Router();
 
   router.get("/books-search", async (req, res) => {
     const { q } = req.query;

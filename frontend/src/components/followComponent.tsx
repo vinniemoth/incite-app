@@ -7,17 +7,20 @@ interface followProps {
 }
 
 export default function FollowComponent({ userId }: followProps) {
-  const [isFollower, setIsFollower] = useState(false);
+  const [isFollower, setIsFollower] = useState<any>(false);
 
   const fetchFollow = async () => {
     const response = await moduleApi.fetchFollow(userId);
-    setIsFollower(response.following);
-    return response;
+    const data = await response.json();
+    console.log(data);
+    setIsFollower(data);
+    return data;
   };
 
   const setFollow = async () => {
     const response = await moduleApi.setFollow(isFollower, userId);
-    setIsFollower(response.following);
+    console.log(isFollower);
+    setIsFollower(!isFollower);
     return response;
   };
 
@@ -27,13 +30,15 @@ export default function FollowComponent({ userId }: followProps) {
 
   return (
     <>
-      <div className="flex flex-row items-center gap-2">
-        <div
-          className=" flex items-center justify-center w-full h-10 bg-zinc-800 rounded-full  cursor-pointer hover:ring-1 hover:ring-purple-500"
+      <div className="flex flex-row items-center my-5">
+        <button
+          className={`flex items-center justify-center w-full h-10  rounded-full transition-all duration-600 cursor-pointer hover:ring-1 hover:ring-purple-500 ${
+            isFollower ? "bg-purple-500" : "bg-zinc-800"
+          }`}
           onClick={setFollow}
         >
           {isFollower ? "Following" : "Follow"}
-        </div>
+        </button>
       </div>
     </>
   );

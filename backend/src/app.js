@@ -14,14 +14,15 @@ import GoogleBooksService from "./services/googleBooks.service.js";
 // Routes with DI implemented
 import setupAuthRoutes from "./routes/authRoutes.js";
 import setupApiRoutes from "./routes/apiRoutes.js";
+import setupPostRoutes from "./routes/postRoutes.js";
+import setupUserRoutes from "./routes/userRoutes.js";
 
 // Other Routes
-import postRoutes from "./routes/postRoutes.js";
-import setupUserRoutes from "./routes/userRoutes.js";
 import UserService from "./services/user.service.js";
+import PostService from "./services/post.services.js";
 
 const app = express();
-const PORT = 5000;
+const PORT = process.env.PORT;
 
 // Classes instances
 const prisma = new PrismaClient();
@@ -33,6 +34,7 @@ const googleBooks = new GoogleBooksService(
 );
 const authServices = new AuthServices(prisma, cryptoClient, jwtManager);
 const userService = new UserService(prisma);
+const postService = new PostService(prisma);
 
 app.use(cors());
 app.use(express.json());
@@ -46,9 +48,9 @@ const authMiddleware = makeAuthMiddleware(jwtManager);
 app.use("/auth", setupAuthRoutes(authServices));
 app.use("/api", authMiddleware, setupApiRoutes(googleBooks));
 app.use("/user", authMiddleware, setupUserRoutes(userService));
+app.use("/post", authMiddleware, setupPostRoutes(postService));
 
 // Other Routes
-app.use("/post", authMiddleware, postRoutes);
 
 app.get("/", (req, res) => {
   res.send("Hello World");

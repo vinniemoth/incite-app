@@ -41,6 +41,7 @@ export default function PostReactions(props: PostReactionsProps) {
     const newReaction = userReaction === type ? null : type;
     setUserReaction(newReaction);
     const data = await moduleApi.postReact(props.postId, newReaction);
+    console.log(data);
     setTotalReactionsCount({
       LIKE: data.counts?.LIKE || 0,
       LOVE: data.counts?.LOVE || 0,

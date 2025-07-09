@@ -32,14 +32,12 @@ function setupAuthRoutes(authServices) {
         },
         token: user.token,
       });
-      console.log(user);
     } catch (err) {
       return res.status(500).json({ message: "Erro interno do servidor." });
     }
   });
 
   router.post("/logout", async (req, res) => {
-    console.log("Requisição de logout recebida");
     return res.status(200).json({ message: "Logout feito com sucesso!" });
   });
 
