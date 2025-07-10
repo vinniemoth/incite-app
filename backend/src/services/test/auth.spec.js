@@ -1,31 +1,6 @@
 import { describe, expect, test, vi, beforeEach } from "vitest";
 import AuthServices from "../auth.services.js";
 
-// function sum(a, b) {
-//   if (typeof a === "number" && typeof b === "number") {
-//     return a + b;
-//   }
-//   return NaN;
-// }
-
-// describe("sum test", () => {
-//   test("should add two numbers", () => {
-//     expect(sum(1, 2)).toBe(3);
-//   });
-//   test("should add a number and a string", () => {
-//     expect(sum(2, "2")).toBe(NaN);
-//   });
-//   test("should add a string and a string", () => {
-//     expect(sum("2", "2")).toBe(NaN);
-//   });
-//   test("should add a number and an undefined value", () => {
-//     expect(sum(2, undefined)).toBe(NaN);
-//   });
-//   test("should add a null value and an undefined value", () => {
-//     expect(sum(null, undefined)).toBe(NaN);
-//   });
-// });
-
 describe("AuthServices", () => {
   let dbClient;
   let cryptoClient;
