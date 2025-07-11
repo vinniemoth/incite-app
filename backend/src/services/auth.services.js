@@ -10,7 +10,7 @@ class AuthServices {
       return null;
     }
 
-    const hashedPassword = this.cryptoClient.hash(password);
+    const hashedPassword = await this.cryptoClient.hash(password);
 
     try {
       const newUser = await this.dbClient.user.create({
@@ -43,7 +43,10 @@ class AuthServices {
       return null;
     }
 
-    const passwordIsValid = this.cryptoClient.compare(password, user.password);
+    const passwordIsValid = await this.cryptoClient.compare(
+      password,
+      user.password
+    );
 
     if (!passwordIsValid) {
       return null;

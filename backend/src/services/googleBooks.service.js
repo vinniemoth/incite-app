@@ -1,14 +1,15 @@
 class GoogleBooksService {
-  constructor(BASE_URL, API_KEY) {
+  constructor(BASE_URL, API_KEY, fetchFn) {
     this.BASE_URL = BASE_URL;
     this.API_KEY = API_KEY;
+    this.fetchFn = fetchFn;
   }
 
   async searchBook(q) {
     if (!q) {
-      return null;
+      return new Error();
     }
-    const searchResult = await fetch(
+    const searchResult = await this.fetchFn(
       `${this.BASE_URL}?q=${q}&key=${this.API_KEY}`
     );
     return searchResult.json();
@@ -18,7 +19,9 @@ class GoogleBooksService {
     if (!id) {
       return null;
     }
-    const bookInfo = await fetch(`${this.BASE_URL}/${id}/?key${this.API_KEY}`);
+    const bookInfo = await this.fetchFn(
+      `${this.BASE_URL}/${id}/?key${this.API_KEY}`
+    );
     return bookInfo.json();
   }
 }
