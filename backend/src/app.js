@@ -3,6 +3,7 @@ import cors from "cors";
 import { PrismaClient } from "@prisma/client";
 import BcryptCryptoClient from "./services/cryptoclient.service.js";
 import JwtManager from "./services/jwtManager.service.js";
+import Argon2 from "./services/argon2.service.js";
 
 // Middleware
 import makeAuthMiddleware from "./middleware/Auth.middleware.js";
@@ -26,11 +27,12 @@ const PORT = process.env.PORT;
 
 // Classes instances
 const prisma = new PrismaClient();
-const cryptoClient = new BcryptCryptoClient();
+const cryptoClient = new Argon2();
 const jwtManager = new JwtManager();
 const googleBooks = new GoogleBooksService(
   "https://www.googleapis.com/books/v1/volumes",
-  process.env.GOOGLE_BOOKS_API_KEY
+  process.env.GOOGLE_BOOKS_API_KEY,
+  fetch
 );
 const authServices = new AuthServices(prisma, cryptoClient, jwtManager);
 const userService = new UserService(prisma);

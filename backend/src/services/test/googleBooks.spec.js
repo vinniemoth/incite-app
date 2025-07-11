@@ -6,12 +6,11 @@ describe("GoogleBooksService", () => {
   const API_KEY = "testApiKey";
 
   let googleBooksService;
-  let fetchSpy;
+  let fetchFnMock;
 
   beforeEach(() => {
-    googleBooksService = new GoogleBooksService(BASE_URL, API_KEY);
-
-    fetchSpy = vi.spyOn(globalThis, "fetch");
+    fetchFnMock = vi.fn();
+    googleBooksService = new GoogleBooksService(BASE_URL, API_KEY, fetchFnMock);
   });
 
   test("fetches book search successfully", async () => {
@@ -20,18 +19,18 @@ describe("GoogleBooksService", () => {
 
     const mockBookData = { title: "mockBookTitle", author: "mockBookAuthor" };
 
-    fetchSpy.mockResolvedValueOnce({
+    fetchFnMock.mockResolvedValueOnce({
       json: vi.fn().mockResolvedValueOnce(mockBookData),
     });
 
     const result = await googleBooksService.searchBook(q);
 
-    expect(fetchSpy).toHaveBeenCalledWith(expectedUrl);
-    expect(fetchSpy).toHaveBeenCalledTimes(1);
+    expect(fetchFnMock).toHaveBeenCalledWith(expectedUrl);
+    expect(fetchFnMock).toHaveBeenCalledTimes(1);
 
     expect(result).toEqual(mockBookData);
 
-    fetchSpy.mockRestore();
+    fetchFnMock.mockRestore();
   });
 
   test("should handle fetch errors", async () => {
@@ -40,15 +39,14 @@ describe("GoogleBooksService", () => {
     const q = "testQuery";
     const expectedUrl = `${BASE_URL}?q=${q}&key=${API_KEY}`;
 
-    fetchSpy.mockRejectedValueOnce(new Error(errorMessage));
+    fetchFnMock.mockRejectedValueOnce(new Error(errorMessage));
 
-    const result = await googleBooksService.searchBook(q);
+    await expect(() => googleBooksService.searchBook(q)).rejects.toThrowError(
+      errorMessage
+    );
 
-    expect(fetchSpy).toBeCalledTimes(1);
-    expect(fetchSpy).toBeCalledWith(expectedUrl);
-
-    expect(result).toBeInstanceOf(Error);
-    expect(result.message).toContain(errorMessage);
+    expect(fetchFnMock).toBeCalledTimes(1);
+    expect(fetchFnMock).toBeCalledWith(expectedUrl);
   });
 
   test("should handle errors when no query is provided", async () => {
