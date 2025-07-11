@@ -1,26 +1,60 @@
-import { describe, expect, test, vi } from "vitest";
+import { describe, expect, test, vi, beforeEach } from "vitest";
+import GoogleBooksService from "../googleBooks.service";
 
 describe("GoogleBooksService", () => {
-  let BASE_URL;
-  let API_KEY;
+  const BASE_URL = "http://example.com/api";
+  const API_KEY = "testApiKey";
+
+  let googleBooksService;
+  let fetchSpy;
+
+  beforeEach(() => {
+    googleBooksService = new GoogleBooksService(BASE_URL, API_KEY);
+
+    fetchSpy = vi.spyOn(globalThis, "fetch");
+  });
 
   test("fetches book search successfully", async () => {
-    BASE_URL = "http://example.com/api";
-    API_KEY = "testApiKey";
-    const mockResponse = { data: "testData" };
+    const q = "testQuery";
+    const expectedUrl = `${BASE_URL}?q=${q}&key=${API_KEY}`;
 
-    global.fetch = vi.fn().mockResolvedValue({
-      json: () => Promise.resolve(mockResponse),
+    const mockBookData = { title: "mockBookTitle", author: "mockBookAuthor" };
+
+    fetchSpy.mockResolvedValueOnce({
+      json: vi.fn().mockResolvedValueOnce(mockBookData),
     });
 
+    const result = await googleBooksService.searchBook(q);
+
+    expect(fetchSpy).toHaveBeenCalledWith(expectedUrl);
+    expect(fetchSpy).toHaveBeenCalledTimes(1);
+
+    expect(result).toEqual(mockBookData);
+
+    fetchSpy.mockRestore();
+  });
+
+  test("should handle fetch errors", async () => {
+    const errorMessage = "Network Error: Failed to fetch";
+
     const q = "testQuery";
+    const expectedUrl = `${BASE_URL}?q=${q}&key=${API_KEY}`;
 
-    const response = await fetch(`${BASE_URL}?q=${q}&key=${API_KEY}`);
+    fetchSpy.mockRejectedValueOnce(new Error(errorMessage));
 
-    const data = await response.json();
+    const result = await googleBooksService.searchBook(q);
 
-    expect(fetch).toHaveBeenCalledTimes(1);
-    expect(fetch).toHaveBeenCalledWith(`${BASE_URL}?q=${q}&key=${API_KEY}`);
-    expect(data).toEqual(mockResponse);
+    expect(fetchSpy).toBeCalledTimes(1);
+    expect(fetchSpy).toBeCalledWith(expectedUrl);
+
+    expect(result).toBeInstanceOf(Error);
+    expect(result.message).toContain(errorMessage);
+  });
+
+  test("should handle errors when no query is provided", async () => {
+    const q = undefined;
+    const result = await googleBooksService.searchBook(q);
+
+    expect(result).toBeInstanceOf(Error);
   });
 });

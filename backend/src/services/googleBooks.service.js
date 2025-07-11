@@ -6,12 +6,16 @@ class GoogleBooksService {
 
   async searchBook(q) {
     if (!q) {
-      return null;
+      return new Error();
     }
-    const searchResult = await fetch(
-      `${this.BASE_URL}?q=${q}&key=${this.API_KEY}`
-    );
-    return searchResult.json();
+    try {
+      const searchResult = await fetch(
+        `${this.BASE_URL}?q=${q}&key=${this.API_KEY}`
+      );
+      return searchResult.json();
+    } catch (err) {
+      return new Error(err);
+    }
   }
 
   async fetchBookInfo(id) {
