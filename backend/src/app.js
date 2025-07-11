@@ -32,7 +32,7 @@ const jwtManager = new JwtManager();
 const googleBooks = new GoogleBooksService(
   "https://www.googleapis.com/books/v1/volumes",
   process.env.GOOGLE_BOOKS_API_KEY,
-  fetch
+  fetch,
 );
 const authServices = new AuthServices(prisma, cryptoClient, jwtManager);
 const userService = new UserService(prisma);
