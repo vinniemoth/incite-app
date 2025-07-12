@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
-import { PrismaClient } from "@prisma/client";
-import BcryptCryptoClient from "./services/cryptoclient.service.js";
+import { PrismaClient } from "./generated/prisma/client.js";
+import BcryptCryptoClient from "./services/cryptoClient.service.js";
 import JwtManager from "./services/jwtManager.service.js";
 import Argon2 from "./services/argon2.service.js";
 
@@ -32,7 +32,7 @@ const jwtManager = new JwtManager();
 const googleBooks = new GoogleBooksService(
   "https://www.googleapis.com/books/v1/volumes",
   process.env.GOOGLE_BOOKS_API_KEY,
-  fetch,
+  fetch
 );
 const authServices = new AuthServices(prisma, cryptoClient, jwtManager);
 const userService = new UserService(prisma);
