@@ -154,7 +154,7 @@ export default function UserProfile() {
                   </div>
                 ) : (
                   <p className="text-zinc-500 text-lg">
-                    This user hasn't shared any book covers yet.
+                    This user hasn't shared any book quotes yet.
                   </p>
                 )}
                 {userData.posts.length > 0 && (

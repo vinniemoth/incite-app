@@ -5,6 +5,7 @@ export default function Home() {
   return (
     <>
       <div className="w-screen h-screen flex flex-col items-center justify-center gap-8">
+        <Image src="/incite_logo.png" alt={""} width={150} height={150}></Image>
         <h1 className="font-ultra text-center text-5xl px-5">
           Read. Share. Discover. <br /> Show it to the world.
         </h1>

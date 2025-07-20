@@ -4,6 +4,7 @@ import { FaMagnifyingGlass, FaCircleArrowDown } from "react-icons/fa6";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { moduleApi } from "@/api/api";
+import Image from "next/image";
 import Logout from "@/components/logout";
 import Link from "next/link";
 
@@ -59,11 +60,10 @@ export default function Home() {
 
   return (
     <div className="w-screen flex flex-col h-full items-center py-5">
-      <div className="relative w-full max-w-md px-4">
-        {" "}
+      <div className="relative  w-1/3 px-3">
         <FaMagnifyingGlass className="absolute top-3 left-6 text-zinc-400" />{" "}
         <input
-          className="sm:w-full w-80 pl-8 h-10 border border-zinc-600 rounded-lg p-3 bg-zinc-800 text-zinc-200 placeholder-zinc-500 focus:ring-2 focus:ring-purple-500 focus:outline-none"
+          className="sm:w-full w-full pl-8 h-10 border border-zinc-600 rounded-lg p-3 bg-zinc-800 text-zinc-200 placeholder-zinc-500 focus:ring-2 focus:ring-purple-500 focus:outline-none"
           type="text"
           placeholder="Search for your friends!"
           value={search}
@@ -99,12 +99,14 @@ export default function Home() {
           </div>
         )}
       </div>
-      <PostInput />
-      <FaCircleArrowDown
-        size={30}
-        className="cursor-pointer hover:text-zinc-400"
-        onClick={() => router.push("/feed")}
-      ></FaCircleArrowDown>
+      <div className="flex flex-col items-center w-full">
+        <PostInput />
+        <FaCircleArrowDown
+          size={30}
+          className="cursor-pointer hover:text-zinc-400"
+          onClick={() => router.push("/feed")}
+        ></FaCircleArrowDown>
+      </div>
       <Logout></Logout>
     </div>
   );

@@ -1,8 +1,11 @@
 "use client";
+
 import { useState } from "react";
 import { FaEnvelope, FaLock, FaUser } from "react-icons/fa6";
 import { moduleApi } from "@/api/api";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
+import { ToastContainer, toast } from "react-toastify";
 
 export default function Page() {
   const [mode, setMode] = useState("login");
@@ -18,7 +21,6 @@ export default function Page() {
   const login = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     loginUser();
-    console.log("Logado!");
   };
 
   const register = (e: React.FormEvent<HTMLFormElement>) => {
@@ -29,7 +31,7 @@ export default function Page() {
 
   const loginUser = async () => {
     if (!email || !password) {
-      alert("Preencha todos os campos");
+      toast.error("There are fields missing.");
       return;
     }
 
@@ -37,7 +39,7 @@ export default function Page() {
 
     if (json.token) {
       localStorage.setItem("authToken", json.token);
-      alert(json.message);
+      toast.success("User successfully logged in.");
       router.push("/feed");
     } else {
       alert(json.message);
@@ -47,18 +49,19 @@ export default function Page() {
   const createUser = async () => {
     let json = await moduleApi.createUser(username, email, password);
     if (!email || !password || !username) {
-      alert("Preencha todos os campos");
+      toast.error("There are fields missing.");
       return;
     }
     if (json) {
-      alert("criação bem sucedida");
+      toast.success("User successfully registered.");
     } else {
-      alert("Erro ao criar a conta");
+      toast.error("Account creation failed.");
     }
   };
 
   return (
     <div className="flex flex-col items-center h-screen justify-center gap-10">
+      <Image src="/incite_logo.png" alt={""} width={150} height={150} />
       <h1 className="font-ultra text-4xl text-center">
         {mode === "login" ? "Welcome back" : "Create account"}
       </h1>

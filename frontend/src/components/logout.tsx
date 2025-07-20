@@ -2,6 +2,7 @@
 import { moduleApi } from "@/api/api";
 import { useRouter } from "next/navigation";
 import { FaSignOutAlt } from "react-icons/fa";
+import { toast } from "react-toastify";
 
 export default function Logout() {
   const router = useRouter();
@@ -11,6 +12,7 @@ export default function Logout() {
     console.log(response);
 
     localStorage.clear();
+    toast.success("User successfully logged out.");
     router.push("/");
   };
 

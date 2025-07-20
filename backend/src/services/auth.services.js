@@ -28,10 +28,10 @@ class AuthServices {
   }
 
   async login(email, password) {
+    console.log(email, password);
     if (!email || !password) {
       return null;
     }
-    console.log(email, password);
 
     const user = await this.dbClient.user.findUnique({
       where: {

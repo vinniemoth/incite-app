@@ -1,5 +1,5 @@
 import { test, describe, expect } from "vitest";
-import BcryptCryptoClient from "../cryptoclient.service";
+// import BcryptCryptoClient from "../cryptoclient.service.js";
 
 describe("BcryptCryptoClient", () => {
   test("should hash and compare password", async () => {

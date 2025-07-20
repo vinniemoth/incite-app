@@ -1,6 +1,7 @@
 "use client";
 import { moduleApi } from "@/api/api";
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 interface followProps {
   userId: string;
@@ -19,7 +20,7 @@ export default function FollowComponent({ userId }: followProps) {
 
   const setFollow = async () => {
     const response = await moduleApi.setFollow(isFollower, userId);
-    console.log(isFollower);
+    toast.success(`${isFollower ? "Unfollowed" : "Followed"} successfully!`);
     setIsFollower(!isFollower);
     return response;
   };

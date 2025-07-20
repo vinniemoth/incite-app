@@ -5,6 +5,7 @@
   "type": "module",
   "main": "app.js",
   "scripts": {
+    "dev": "nodemon src/app.js",
     "start": "docker-compose up",
     "test": "vitest"
   },

@@ -2,6 +2,7 @@
 
 import { moduleApi } from "@/api/api";
 import { useState, useEffect, useRef } from "react";
+import { toast } from "react-toastify";
 
 export default function PostInput() {
   const [quoteContent, setQuoteContent] = useState("");
@@ -121,15 +122,6 @@ export default function PostInput() {
       return;
     }
 
-    console.log("Sharing Quote:", {
-      quote: quoteContent,
-      author: finalAuthor,
-      bookTitle: finalBookTitle || "Not specified",
-      bookId: finalBookId || "Not specified",
-      coverImage: selectedBookCover || "Not available",
-      fullBookData: selectedFullBook,
-    });
-
     const formattedData = await moduleApi.fetchBookInfo(finalBookId!);
 
     const json = await moduleApi.createPost(
@@ -139,7 +131,7 @@ export default function PostInput() {
       finalBookId,
       selectedBookCover
     );
-    alert("Quote shared successfully!");
+    toast.success("Quote shared successfully!");
 
     setQuoteContent("");
     setAuthorSearchTerm("");

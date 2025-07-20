@@ -25,7 +25,7 @@ FROM node:${NODE_VERSION}-alpine as runtime
 
 WORKDIR /app
 
-EXPOSE 3000
+EXPOSE 5000
 
 USER node
 
