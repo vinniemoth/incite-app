@@ -274,7 +274,7 @@ export default function PostInput() {
           <div className="relative w-full">
             <input
               ref={bookInputRef}
-              className="border border-zinc-600 rounded-lg p-3 w-full bg-zinc-800 text-zinc-200 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              className="border border-zinc-600 rounded-lg p-3 w-full bg-zinc-800 text-zinc-200 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent disabled:bg-zinc-300"
               type="text"
               placeholder={
                 finalAuthor ? `Book Name by ${finalAuthor}` : "Book Name"
