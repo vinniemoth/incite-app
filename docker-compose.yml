@@ -1,0 +1,61 @@
+services:
+  incite_pg:
+    image: postgres:17-alpine
+    restart: always
+    networks:
+      - dokploy-network
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - ../files/incite_pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U incite -d incite"]
+      interval: 5s
+      timeout: 2s
+      retries: 20
+
+  incite_pg_migrate:
+    image: node:22.17.0-alpine
+    networks:
+      - dokploy-network
+    build:
+      context: ./backend
+      dockerfile_inline: |
+        FROM node:22.17.0-alpine
+        COPY prisma /prisma
+        WORKDIR /prisma
+        CMD corepack enable && pnpm dlx prisma db push
+    environment:
+      DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@incite_pg:5432/${POSTGRES_DB}
+    depends_on:
+      incite_pg:
+        condition: service_healthy
+
+  incite_backend:
+    restart: always
+    networks:
+      - dokploy-network
+    build:
+      context: ./backend
+    environment:
+      DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@incite_pg:5432/${POSTGRES_DB}
+      GOOGLE_BOOKS_API_KEY: ${GOOGLE_BOOKS_API_KEY}
+      JWT_SECRET: ${JWT_SECRET}
+      PORT: 5000
+    depends_on:
+      incite_pg_migrate:
+        condition: service_completed_successfully
+
+  incite_frontend:
+    networks:
+      - dokploy-network
+    build:
+      context: ./frontend
+      args:
+        NEXT_PUBLIC_BACKEND_URL: ${NEXT_PUBLIC_BACKEND_URL}
+
+networks:
+  dokploy-network:
+    external: true

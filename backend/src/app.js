@@ -38,7 +38,7 @@ const authServices = new AuthServices(prisma, cryptoClient, jwtManager);
 const userService = new UserService(prisma);
 const postService = new PostService(prisma);
 
-app.use(cors());
+app.use(cors({ origin: '*' }));
 app.use(express.json());
 
 // Middleware with DI
