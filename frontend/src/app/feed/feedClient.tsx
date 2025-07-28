@@ -74,6 +74,10 @@ export default function FeedClient() {
     fetchPostsData();
   }, []);
 
+  const handlePostDeleted = (postId: string) => {
+    fetchPostsData();
+  };
+
   return (
     <div className="w-screen h-screen flex flex-col items-center justify-center overflow-hidden bg-zinc-900 text-white">
       {" "}
@@ -100,7 +104,10 @@ export default function FeedClient() {
               className="w-full h-full flex justify-center items-center p-4"
             >
               <div className="flex items-center mx-auto h-full">
-                <Post {...postData} />
+                <Post
+                  {...postData}
+                  onPostDeleted={() => handlePostDeleted(postData.id)}
+                />
               </div>
             </SwiperSlide>
           ))}

@@ -5,8 +5,9 @@ import { FaQuoteLeft, FaQuoteRight } from "react-icons/fa6";
 import Reactions from "./reactions";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { BiTrash } from "react-icons/bi";
 import { moduleApi } from "@/api/api";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 interface PostProps {
   id: string;
@@ -17,15 +18,31 @@ interface PostProps {
   coverImage: string | null;
   createdAt: string;
   quote: string;
+
+  onPostDeleted: (postId: string) => void;
 }
 
 export default function Post(props: PostProps) {
+  const [deleting, setDeleting] = useState(false);
+  const router = useRouter();
   const displayAuthors = props.authorsName.join(", ");
 
-  const router = useRouter();
+  const handleDelete = async () => {
+    setDeleting(true);
+    try {
+      await moduleApi.deletePost(props.id);
+      if (props.onPostDeleted) {
+        props.onPostDeleted(props.id);
+      }
+    } finally {
+      setDeleting(false);
+    }
+  };
 
   return (
-    <div className="w-full max-w-2xl mx-auto bg-zinc-800 rounded-2xl shadow-xl flex flex-col sm:flex-row items-stretch p-6 sm:p-8">
+    <div
+      className={`relative w-full max-w-2xl mx-auto bg-zinc-800 rounded-2xl shadow-xl flex flex-col sm:flex-row items-stretch p-6 sm:p-8 `}
+    >
       <div className="flex-shrink-0 flex justify-center items-center mb-6 sm:mb-0 sm:mr-8">
         <Image
           onClick={() => router.push(`/book/${props.bookId}`)}
@@ -76,6 +93,11 @@ export default function Post(props: PostProps) {
         </div>
         <Reactions postId={props.id} />
       </div>
+      <BiTrash
+        className="absolute top-5 right-5 bg-zinc-800 p-3 rounded-xl cursor-pointer hover:bg-zinc-700 z-50 text-zinc-500 hover:text-red-500"
+        size={40}
+        onClick={handleDelete}
+      />
     </div>
   );
 }

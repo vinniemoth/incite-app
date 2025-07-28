@@ -25,6 +25,16 @@ function setupPostRoutes(postService) {
     }
   });
 
+  router.delete("/:postId", async (req, res) => {
+    const postId = req.params.postId;
+    try {
+      await postService.deletePost(postId);
+      return res.status(200).json("Post Deleted");
+    } catch (err) {
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
   router.get("/", async (req, res) => {
     const userId = res.user_id;
     try {
