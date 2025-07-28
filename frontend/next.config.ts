@@ -5,6 +5,10 @@ const nextConfig: NextConfig = {
 };
 
 module.exports = {
+  output: "standalone",
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
   images: {
     dangerouslyAllowSVG: true,
     remotePatterns: [

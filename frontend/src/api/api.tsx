@@ -1,6 +1,8 @@
+const backendURL = process.env.NEXT_PUBLIC_BACKEND_URL;
+
 export const moduleApi = {
   createUser: async (username: string, email: string, password: string) => {
-    const response = await fetch("http://localhost:5000/auth", {
+    const response = await fetch(`${backendURL}/auth`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -16,7 +18,7 @@ export const moduleApi = {
   },
 
   loginUser: async (email: string, password: string) => {
-    const response = await fetch("http://localhost:5000/auth/login", {
+    const response = await fetch(`${backendURL}/auth/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -30,7 +32,7 @@ export const moduleApi = {
     const token = localStorage.getItem("authToken");
     try {
       const response = await fetch(
-        `http://localhost:5000/api/books-search?q=${encodeURIComponent(q)}`,
+        `${backendURL}/api/books-search?q=${encodeURIComponent(q)}`,
         {
           method: "GET",
           headers: {
@@ -53,7 +55,7 @@ export const moduleApi = {
 
   fetchBookInfo: async (id: string) => {
     const token = localStorage.getItem("authToken");
-    const response = await fetch(`http://localhost:5000/api/book/${id}`, {
+    const response = await fetch(`${backendURL}/api/book/${id}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -66,7 +68,7 @@ export const moduleApi = {
 
   fetchPostsByBookId: async (id: string) => {
     const token = localStorage.getItem("authToken");
-    const response = await fetch(`http://localhost:5000/post/${id}`, {
+    const response = await fetch(`${backendURL}/post/${id}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -85,7 +87,7 @@ export const moduleApi = {
     bookCover: string | null
   ) => {
     const token = localStorage.getItem("authToken");
-    const response = await fetch("http://localhost:5000/post", {
+    const response = await fetch(`${backendURL}/post`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -99,7 +101,7 @@ export const moduleApi = {
 
   fetchPosts: async () => {
     const token = localStorage.getItem("authToken");
-    const response = await fetch("http://localhost:5000/post", {
+    const response = await fetch(`${backendURL}/post`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -112,7 +114,7 @@ export const moduleApi = {
   fetchUsers: async (search: string) => {
     const token = localStorage.getItem("authToken");
     const response = await fetch(
-      `http://localhost:5000/user/search?username=${search.trim()}`,
+      `${backendURL}/user/search?username=${search.trim()}`,
       {
         headers: {
           "Content-Type": "application/json",
@@ -126,7 +128,7 @@ export const moduleApi = {
   fetchUser: async (username: string) => {
     const token = localStorage.getItem("authToken");
     const response = await fetch(
-      `http://localhost:5000/user/profile?username=${username}`,
+      `${backendURL}/user/profile?username=${username}`,
       {
         headers: {
           "Content-Type": "application/json",
@@ -139,7 +141,7 @@ export const moduleApi = {
 
   logout: async () => {
     const token = localStorage.getItem("authToken");
-    const response = await fetch("http://localhost:5000/auth/logout", {
+    const response = await fetch(`${backendURL}/auth/logout`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -153,32 +155,26 @@ export const moduleApi = {
 
   fetchFollow: async (userId: string) => {
     const token = localStorage.getItem("authToken");
-    const response = await fetch(
-      `http://localhost:5000/user/follow/${userId}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `${token}`,
-        },
-      }
-    );
+    const response = await fetch(`${backendURL}/user/follow/${userId}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `${token}`,
+      },
+    });
     return response;
   },
 
   setFollow: async (isFollower: boolean, userId: string) => {
     const token = localStorage.getItem("authToken");
-    const response = await fetch(
-      `http://localhost:5000/user/follow/${userId}`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `${token}`,
-        },
-        body: JSON.stringify({ isFollower }),
-      }
-    );
+    const response = await fetch(`${backendURL}/user/follow/${userId}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `${token}`,
+      },
+      body: JSON.stringify({ isFollower }),
+    });
     return response;
   },
 
@@ -186,23 +182,20 @@ export const moduleApi = {
 
   postReact: async (postId: string, type: string | null) => {
     const token = localStorage.getItem("authToken");
-    const response = await fetch(
-      `http://localhost:5000/post/userReaction/${postId}`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `${token}`,
-        },
-        body: JSON.stringify({ type }),
-      }
-    );
+    const response = await fetch(`${backendURL}/post/userReaction/${postId}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `${token}`,
+      },
+      body: JSON.stringify({ type }),
+    });
     return response.json();
   },
 
   fetchReactions: async (postId: string) => {
     const token = localStorage.getItem("authToken");
-    const response = await fetch(`http://localhost:5000/post/react/${postId}`, {
+    const response = await fetch(`${backendURL}/post/react/${postId}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
