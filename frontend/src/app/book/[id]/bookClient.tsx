@@ -93,6 +93,10 @@ export default function BookClient() {
     );
   }
 
+  const handlePostDeleted = (postId: string) => {
+    fetchPostsByBookId();
+  };
+
   return (
     <div className="flex flex-col items-center w-full min-h-screen bg-zinc-900 text-white">
       <div className="w-full h-screen flex justify-center items-center">
@@ -217,6 +221,7 @@ export default function BookClient() {
                     bookId={postData.bookId}
                     authorsName={postData.authorsName}
                     quote={postData.quote}
+                    onPostDeleted={handlePostDeleted}
                   />
                 </div>
               </SwiperSlide>
