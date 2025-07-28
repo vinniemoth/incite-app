@@ -165,7 +165,6 @@ export default function PostInput() {
     setFinalBookTitle(title);
     setFinalBookId(book.id);
     setSelectedFullBook(book);
-    console.log(finalBookId);
 
     let finalCoverUrl: string | null = null;
 
