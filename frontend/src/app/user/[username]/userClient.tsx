@@ -101,6 +101,11 @@ export default function UserClient() {
       seenBookNames.add(post.bookName);
     }
   });
+
+  const handlePostDeleted = (postId: string) => {
+    fetchUserData();
+  };
+
   return (
     <div className="flex flex-col items-center  min-h-screen bg-zinc-900 text-white">
       <div className="flex justify-center items-center w-full h-screen">
@@ -187,6 +192,7 @@ export default function UserClient() {
                         bookId={postData.bookId}
                         authorsName={postData.authorsName}
                         quote={postData.quote}
+                        onPostDeleted={handlePostDeleted}
                       />
                     </div>
                   </div>
