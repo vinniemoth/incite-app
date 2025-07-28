@@ -21,6 +21,15 @@ class PostService {
     return newPost;
   }
 
+  async deletePost(postId) {
+    await this.dbClient.post.delete({
+      where: {
+        id: postId,
+      },
+    });
+    return;
+  }
+
   async fetchFollowerPost(followerId) {
     const followerUsersRecords = await this.dbClient.userFollows.findMany({
       where: {

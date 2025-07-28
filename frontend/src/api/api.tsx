@@ -99,6 +99,18 @@ export const moduleApi = {
     return response.json;
   },
 
+  deletePost: async (postId: string) => {
+    const token = localStorage.getItem("authToken");
+    const response = await fetch(`${backendURL}/post/${postId}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `${token}`,
+      },
+    });
+    return response.json();
+  },
+
   fetchPosts: async () => {
     const token = localStorage.getItem("authToken");
     const response = await fetch(`${backendURL}/post`, {
