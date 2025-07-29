@@ -85,7 +85,7 @@ export default function FeedClient() {
       {error && <p className="text-red-400 text-lg mt-8">{error}</p>}
       {!loading && !error && posts.length === 0 && (
         <p className="text-zinc-400 text-lg mt-8">
-          There's nothing here... Make the first move!
+          It's empty here... Make the first move!
         </p>
       )}
       {!loading && !error && posts.length > 0 && (
