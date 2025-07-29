@@ -23,6 +23,7 @@ interface PostData {
   bookId: string;
   coverImage: string;
   createdAt: string;
+  ownerId: string;
   quote: string;
 }
 
@@ -192,6 +193,7 @@ export default function UserClient() {
                         bookId={postData.bookId}
                         authorsName={postData.authorsName}
                         quote={postData.quote}
+                        ownerId={postData.ownerId}
                         onPostDeleted={handlePostDeleted}
                       />
                     </div>

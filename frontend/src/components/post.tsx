@@ -17,25 +17,20 @@ interface PostProps {
   bookId: string;
   coverImage: string | null;
   createdAt: string;
+  ownerId: string;
   quote: string;
 
   onPostDeleted: (postId: string) => void;
 }
 
 export default function Post(props: PostProps) {
-  const [deleting, setDeleting] = useState(false);
   const router = useRouter();
   const displayAuthors = props.authorsName.join(", ");
 
   const handleDelete = async () => {
-    setDeleting(true);
-    try {
-      await moduleApi.deletePost(props.id);
-      if (props.onPostDeleted) {
-        props.onPostDeleted(props.id);
-      }
-    } finally {
-      setDeleting(false);
+    await moduleApi.deletePost(props.id);
+    if (props.onPostDeleted) {
+      props.onPostDeleted(props.id);
     }
   };
 

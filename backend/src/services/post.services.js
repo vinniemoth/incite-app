@@ -21,10 +21,11 @@ class PostService {
     return newPost;
   }
 
-  async deletePost(postId) {
+  async deletePost(postId, userId) {
     await this.dbClient.post.delete({
       where: {
         id: postId,
+        ownerId: userId,
       },
     });
     return;

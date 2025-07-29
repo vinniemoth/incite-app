@@ -72,7 +72,7 @@ export default function Home() {
         {search.trim().length >= 3 && (
           <div className="absolute top-full left-4 right-4 z-10 bg-zinc-700 border border-zinc-600 rounded-b-lg shadow-lg max-h-60 overflow-y-auto mt-1">
             {loadingSuggestions && (
-              <p className="p-3 text-zinc-400">Buscando usuários...</p>
+              <p className="p-3 text-zinc-400">Fetching users...</p>
             )}
             {suggestionError && (
               <p className="p-3 text-red-400">{suggestionError}</p>
@@ -81,7 +81,7 @@ export default function Home() {
               suggestedUsers.length === 0 &&
               !suggestionError && (
                 <p className="p-3 text-zinc-400">
-                  Nenhum usuário encontrado para "{search}".
+                  No users found for "{search}".
                 </p>
               )}
             {suggestedUsers.map((user) => (
