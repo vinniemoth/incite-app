@@ -81,11 +81,11 @@ export default function FeedClient() {
   return (
     <div className="w-screen h-screen flex flex-col items-center justify-center overflow-hidden bg-zinc-900 text-white">
       {" "}
-      {loading && <p className="text-lg mt-8">Carregando citações...</p>}
+      {loading && <p className="text-lg mt-8">Loading quotes...</p>}
       {error && <p className="text-red-400 text-lg mt-8">{error}</p>}
       {!loading && !error && posts.length === 0 && (
         <p className="text-zinc-400 text-lg mt-8">
-          Nenhuma citação para exibir. Que tal postar a primeira?
+          There's nothing here... Make the first move!
         </p>
       )}
       {!loading && !error && posts.length > 0 && (

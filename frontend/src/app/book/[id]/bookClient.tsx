@@ -42,6 +42,7 @@ interface Post {
   bookId: string;
   coverImage: string;
   createdAt: string;
+  ownerId: string;
   owner: {
     id: string;
     username: string;
@@ -80,7 +81,7 @@ export default function BookClient() {
   if (!book || !book.volumeInfo) {
     return (
       <div className="text-zinc-500 text-center py-10">
-        Carregando detalhes do livro...
+        Loading book details...
       </div>
     );
   }
@@ -88,7 +89,7 @@ export default function BookClient() {
   if (!book || !book.volumeInfo) {
     return (
       <div className="text-zinc-500 text-center py-10">
-        Carregando detalhes do livro...
+        Loading book details...
       </div>
     );
   }
@@ -139,11 +140,11 @@ export default function BookClient() {
                       />
                     ) : (
                       <div className="w-[300px] h-[450px] bg-zinc-700 rounded-lg flex items-center justify-center text-zinc-400 text-center text-lg p-6">
-                        Capa
+                        Cover
                         <br />
-                        Não
+                        not
                         <br />
-                        Disponível
+                        Available
                       </div>
                     )}
                     <h2 className="font-extrabold text-2xl text-purple-400 mt-4">
@@ -221,6 +222,7 @@ export default function BookClient() {
                     bookId={postData.bookId}
                     authorsName={postData.authorsName}
                     quote={postData.quote}
+                    ownerId={postData.ownerId}
                     onPostDeleted={handlePostDeleted}
                   />
                 </div>
@@ -229,7 +231,7 @@ export default function BookClient() {
           ) : (
             <SwiperSlide className="flex justify-center items-center">
               <p className="text-zinc-500 text-lg text-center p-4">
-                Nenhuma citação encontrada para este livro ainda.
+                There's no quote for this book yet.
               </p>
             </SwiperSlide>
           )}
