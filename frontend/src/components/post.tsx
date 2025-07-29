@@ -7,7 +7,6 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { BiTrash } from "react-icons/bi";
 import { moduleApi } from "@/api/api";
-import { useEffect, useState } from "react";
 
 interface PostProps {
   id: string;
@@ -33,6 +32,12 @@ export default function Post(props: PostProps) {
       props.onPostDeleted(props.id);
     }
   };
+
+  const token = localStorage.getItem("authToken");
+  if (!token) return null;
+  const payload = token.split(".")[1];
+  const decodedPayload = JSON.parse(atob(payload));
+  const ownPost = props.ownerId === decodedPayload.id;
 
   return (
     <div
@@ -89,7 +94,11 @@ export default function Post(props: PostProps) {
         <Reactions postId={props.id} />
       </div>
       <BiTrash
-        className="absolute top-5 right-5 bg-zinc-800 p-3 rounded-xl cursor-pointer hover:bg-zinc-700 z-50 text-zinc-500 hover:text-red-500"
+        className={` ${
+          ownPost
+            ? "absolute top-5 right-5 bg-zinc-800 p-3 rounded-xl cursor-pointer hover:bg-zinc-700 z-50 text-zinc-500 hover:text-red-500"
+            : "hidden"
+        }`}
         size={40}
         onClick={handleDelete}
       />
