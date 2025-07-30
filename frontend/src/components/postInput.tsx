@@ -110,15 +110,15 @@ export default function PostInput() {
     e.preventDefault();
 
     if (!quoteContent.trim()) {
-      alert("Please enter your quote!");
+      toast.error("Please enter your quote!");
       return;
     }
     if (!finalAuthor) {
-      alert("Please select or confirm an author!");
+      toast.error("Please select or confirm an author!");
       return;
     }
     if (!finalBookTitle) {
-      alert("Please select or confirm the book name!");
+      toast.error("Please select or confirm the book name!");
       return;
     }
 
