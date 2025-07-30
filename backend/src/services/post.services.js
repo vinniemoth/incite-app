@@ -45,10 +45,12 @@ class PostService {
       (record) => record.followingId
     );
 
+    const feedUsersIds = [...followingIds, followerId];
+
     const post = await this.dbClient.post.findMany({
       where: {
         ownerId: {
-          in: followingIds,
+          in: feedUsersIds,
         },
       },
       include: {
