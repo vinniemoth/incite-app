@@ -42,7 +42,7 @@ export default function SignInClient() {
       toast.success("User successfully logged in.");
       router.push("/feed");
     } else {
-      alert(json.message);
+      toast.error("Login failed");
     }
   };
 
