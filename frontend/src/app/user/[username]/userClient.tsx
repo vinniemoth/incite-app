@@ -107,6 +107,12 @@ export default function UserClient() {
     fetchUserData();
   };
 
+  const token = localStorage.getItem("authToken");
+  if (!token) return null;
+  const payload = token.split(".")[1];
+  const decodedPayload = JSON.parse(atob(payload));
+  const isUser = userData.id === decodedPayload.id;
+
   return (
     <div className="flex flex-col items-center  min-h-screen bg-zinc-900 text-white">
       <div className="flex justify-center items-center w-full h-screen">
@@ -131,7 +137,7 @@ export default function UserClient() {
                   <h1 className="text-5xl font-extrabold text-purple-400 break-words max-w-xs sm:max-w-md mx-auto">
                     {userData.username}
                   </h1>
-                  <FollowComponent userId={userData.id} />
+                  {!isUser && <FollowComponent userId={userData.id} />}
                 </div>
               </div>
               <div className="flex flex-col gap-4 items-center font-ultra">
@@ -203,7 +209,7 @@ export default function UserClient() {
             : null}
         </Swiper>
       </div>
-      <BackButton></BackButton>
+      <BackButton />
     </div>
   );
 }
