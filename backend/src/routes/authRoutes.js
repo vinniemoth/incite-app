@@ -17,7 +17,16 @@ function setupAuthRoutes(authServices) {
         email: newUser.email,
       });
     } catch (err) {
-      return res.status(500).json({ message: "Erro interno do servidor." });
+      switch (err.message) {
+        case "missing_credentials":
+          return res.status(400).json({ message: "All fields are required." });
+        case "email_already_exists":
+          return res.status(400).json({ message: "Email already exists." });
+        case "username_already_exists":
+          return res.status(400).json({ message: "Username already exists." });
+        default:
+          return res.status(500).json({ message: "Erro interno do servidor." });
+      }
     }
   });
 
@@ -33,7 +42,16 @@ function setupAuthRoutes(authServices) {
         token: user.token,
       });
     } catch (err) {
-      return res.status(500).json({ message: "Erro interno do servidor." });
+      switch (err.message) {
+        case "missing_credentials":
+          return res
+            .status(400)
+            .json({ message: "Email and Password are required." });
+        case "invalid_password":
+          return res.status(401).json({ message: "Invalid password." });
+        default:
+          return res.status(500).json({ message: "Erro interno do servidor." });
+      }
     }
   });
 
