@@ -26,7 +26,6 @@ export default function SignInClient() {
   const register = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     createUser();
-    console.log("Registrado!");
   };
 
   const loginUser = async () => {
@@ -42,7 +41,7 @@ export default function SignInClient() {
       toast.success("User successfully logged in.");
       router.push("/feed");
     } else {
-      toast.error("Login failed");
+      toast.error(json.message);
     }
   };
 
@@ -52,10 +51,10 @@ export default function SignInClient() {
       toast.error("There are fields missing.");
       return;
     }
-    if (json) {
+    if (json.id) {
       toast.success("User successfully registered.");
     } else {
-      toast.error("Account creation failed.");
+      toast.error(json.message);
     }
   };
 

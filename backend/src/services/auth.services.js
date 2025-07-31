@@ -7,12 +7,28 @@ class AuthServices {
 
   async createAccount(username, email, password) {
     if (!username || !email || !password) {
-      return null;
+      throw new Error("missing_credentials");
     }
 
     const hashedPassword = await this.cryptoClient.hash(password);
 
-    try {
+    const foundEmail = await this.dbClient.user.findUnique({
+      where: {
+        email,
+      },
+    });
+
+    const foundUsername = await this.dbClient.user.findUnique({
+      where: {
+        username,
+      },
+    });
+
+    if (foundUsername) {
+      throw new Error("username_already_exists");
+    } else if (foundEmail) {
+      throw new Error("email_already_exists");
+    } else {
       const newUser = await this.dbClient.user.create({
         data: {
           username,
@@ -22,14 +38,12 @@ class AuthServices {
       });
 
       return newUser;
-    } catch (err) {
-      throw new Error(err);
     }
   }
 
   async login(email, password) {
     if (!email || !password) {
-      return null;
+      throw new Error("missing_credentials");
     }
 
     const user = await this.dbClient.user.findUnique({
@@ -38,17 +52,13 @@ class AuthServices {
       },
     });
 
-    if (!user) {
-      return null;
-    }
-
     const passwordIsValid = await this.cryptoClient.compare(
       password,
       user.password
     );
 
     if (!passwordIsValid) {
-      return null;
+      throw new Error("invalid_password");
     }
 
     const token = this.jwtManager.sign(user.id, user.email);
