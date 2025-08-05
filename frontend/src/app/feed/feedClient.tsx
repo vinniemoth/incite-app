@@ -1,7 +1,6 @@
 "use client";
 
 import Post from "@/components/post";
-import { useRouter } from "next/navigation";
 import { moduleApi } from "@/api/api";
 
 import { useEffect, useState } from "react";
@@ -12,6 +11,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import { Keyboard, Mousewheel, FreeMode } from "swiper/modules";
 import BackButton from "@/components/backButton";
+import NotificationsButton from "@/components/notificationsButton";
 
 interface PostData {
   id: string;
@@ -114,6 +114,7 @@ export default function FeedClient() {
         </Swiper>
       )}
       <BackButton />
+      <NotificationsButton />
     </div>
   );
 }

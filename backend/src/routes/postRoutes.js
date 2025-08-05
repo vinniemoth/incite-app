@@ -73,7 +73,6 @@ function setupPostRoutes(postService) {
 
     try {
       const reaction = await postService.handleReaction(type, userId, postId);
-      console.log(reaction);
       return res.status(201).json(reaction);
     } catch (err) {
       res.status(500).json({ message: "Erro interno do servidor." });

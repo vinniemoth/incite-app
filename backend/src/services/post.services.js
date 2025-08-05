@@ -1,6 +1,7 @@
 class PostService {
-  constructor(dbClient) {
+  constructor(dbClient, notificationClient) {
     this.dbClient = dbClient;
+    this.notificationClient = notificationClient;
   }
 
   async createPost(authorsName, bookName, bookId, coverImage, quote, userId) {
@@ -108,23 +109,90 @@ class PostService {
   }
 
   async handleReaction(type, userId, postId) {
+    const post = await this.dbClient.post.findUnique({
+      where: { id: postId },
+    });
+    const actor = await this.dbClient.user.findUnique({
+      where: { id: userId },
+    });
+
     const existingReaction = await this.dbClient.reaction.findUnique({
       where: { userId_postId: { userId, postId } },
     });
 
-    if (!existingReaction || existingReaction.type !== type) {
-      const creatingReaction = await this.dbClient.reaction.upsert({
+    if (type === null) {
+      await this.dbClient.reaction.delete({
         where: { userId_postId: { userId, postId } },
-        update: { type },
-        create: { userId, postId, type },
       });
-      return creatingReaction;
+
+      const deletingNotification =
+        await this.notificationClient.deleteNotification({
+          actorId: post.ownerId,
+          userId,
+          type: "REACTED",
+          postId: post.id,
+        });
+
+      return "Reaction Deleted";
     }
-    const deletedReaction = await this.dbClient.reaction.delete({
-      where: { userId_postId: { userId, postId } },
-    });
-    console.log("oi");
-    return "Reaction Deleted";
+
+    if (!existingReaction) {
+      const creatingReaction = await this.dbClient.reaction.create({
+        data: {
+          userId,
+          postId,
+          type,
+        },
+      });
+
+      const notification = await this.notificationClient.createNotification(
+        post.ownerId,
+        "REACTED",
+        {
+          userId,
+          userName: actor.username,
+          postId: post.id,
+          bookName: post.bookName,
+          type,
+        }
+      );
+
+      return creatingReaction;
+    } else if (existingReaction.type !== type) {
+      const updatingReaction = await this.dbClient.reaction.update({
+        where: { userId_postId: { userId, postId } },
+        data: { type },
+      });
+
+      const notificationData = {
+        userId,
+        postId: post.id,
+        bookName: post.bookName,
+        type,
+      };
+
+      const updatingNotification =
+        await this.notificationClient.updateNotification({
+          actorId: post.ownerId,
+          postId: post.id,
+          data: notificationData,
+        });
+
+      if (post.ownerId !== userId) {
+        await this.notificationClient.createNotification(
+          post.ownerId,
+          "REACTED",
+          {
+            userId,
+            userName: actor.username,
+            postId: post.id,
+            bookName: post.bookName,
+            type,
+          }
+        );
+        return updatingReaction;
+      }
+    }
   }
 
   async fetchReactions(postId, userId) {

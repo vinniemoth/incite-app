@@ -9,39 +9,40 @@ generator client {
 }
 
 model User {
-  id        String     @id @default(uuid())
-  username  String     @unique
-  email     String     @unique
-  password  String
-  posts     Post[]
-  reactions Reaction[]
+  id            String     @id @default(uuid())
+  username      String     @unique
+  email         String     @unique
+  password      String
+  posts         Post[]
+  reactions     Reaction[]
+  notifications Notification[]
 
-  following UserFollows[] @relation("FollowerToFollowing")
-  followers UserFollows[] @relation("FollowingToFollower")
+  following     UserFollows[] @relation("FollowerToFollowing")
+  followers     UserFollows[] @relation("FollowingToFollower")
 }
 
 model UserFollows {
-  id          String @id @default(uuid())
-  followerId  String
-  follower    User @relation("FollowerToFollowing", fields: [followerId], references: [id])
-  followingId String
-  following   User @relation("FollowingToFollower", fields: [followingId], references: [id])
+  id            String @id @default(uuid())
+  followerId    String
+  follower      User @relation("FollowerToFollowing", fields: [followerId], references: [id])
+  followingId   String
+  following     User @relation("FollowingToFollower", fields: [followingId], references: [id])
 
   @@unique([followerId, followingId])
 }
 
 model Post {
-  id          String     @id @default(uuid())
-  bookName    String
-  bookId      String
-  authorsName String[]
-  coverImage  String
-  quote       String     @db.Text
-  createdAt   DateTime   @default(now())
-  reactions   Reaction[]
+  id            String     @id @default(uuid())
+  bookName      String
+  bookId        String
+  authorsName   String[]
+  coverImage    String
+  quote         String     @db.Text
+  createdAt     DateTime   @default(now())
+  reactions     Reaction[]
 
-  ownerId String
-  owner   User   @relation(fields: [ownerId], references: [id])
+  ownerId       String
+  owner         User       @relation(fields: [ownerId], references: [id])
 }
 
 enum ReactionType {
@@ -52,14 +53,25 @@ enum ReactionType {
 }
 
 model Reaction {
-  id        String       @id @default(uuid())
-  userId    String
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  postId    String
-  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
-  type      ReactionType
-  createdAt DateTime     @default(now())
-  updatedAt DateTime     @updatedAt
+  id            String       @id @default(uuid())
+  userId        String
+  user          User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  postId        String
+  post          Post         @relation(fields: [postId], references: [id], onDelete: Cascade)
+  type          ReactionType
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
 
   @@unique([userId, postId])
+
+}
+
+model Notification {
+  id            String        @id @default(uuid())
+  userId        String
+  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type          String
+  data          Json
+  isRead        Boolean       @default(false)
+  createdAt     DateTime      @default(now())
 }

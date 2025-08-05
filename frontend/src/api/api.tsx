@@ -216,4 +216,34 @@ export const moduleApi = {
     });
     return response.json();
   },
+
+  // Notification Request
+
+  fetchNotifications: async () => {
+    const token = localStorage.getItem("authToken");
+    const response = await fetch(`${backendURL}/notifications`, {
+      method: "GET",
+      headers: {
+        "Content-type": "application/json",
+        Authorization: `${token}`,
+      },
+    });
+    return response.json();
+  },
+
+  markNotificationAsRead: async (notificationId: string) => {
+    const token = localStorage.getItem("authToken");
+    console.log(token, notificationId);
+    const response = await fetch(
+      `${backendURL}/notifications/${notificationId}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${token}`,
+        },
+      }
+    );
+    return response.json();
+  },
 };
