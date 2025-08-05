@@ -1,6 +1,7 @@
 class UserService {
-  constructor(dbClient) {
+  constructor(dbClient, notificationClient) {
     this.dbClient = dbClient;
+    this.notificationClient = notificationClient;
   }
 
   async fetchSearchUser(username) {
@@ -64,7 +65,25 @@ class UserService {
           followingId,
         },
       });
-      return true;
+
+      const author = await this.dbClient.user.findUnique({
+        where: {
+          id: followerId,
+        },
+      });
+
+      const followNotification =
+        await this.notificationClient.createNotification(
+          followingId,
+          "FOLLOW",
+          {
+            followerId,
+            followingId,
+            userName: author.username,
+          }
+        );
+
+      return followNotification;
     }
     await this.dbClient.userFollows.delete({
       where: {
@@ -74,6 +93,12 @@ class UserService {
         },
       },
     });
+    const deletedNotification =
+      await this.notificationClient.deleteNotification({
+        followerId,
+        followingId,
+        type: "FOLLOW",
+      });
     return false;
   }
 }
