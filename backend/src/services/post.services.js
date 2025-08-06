@@ -229,6 +229,21 @@ class PostService {
 
     return responseData;
   }
+
+  async fetchSinglePost(postId) {
+    const post = await this.dbClient.post.findUnique({
+      where: { id: postId },
+      include: {
+        owner: {
+          select: {
+            id: true,
+            username: true,
+          },
+        },
+      },
+    });
+    return post;
+  }
 }
 
 export default PostService;

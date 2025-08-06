@@ -61,7 +61,7 @@ export default function NotificationClient() {
                 onClick={() => {
                   notification.type === "FOLLOW"
                     ? router.push(`/user/${notification.data.userName}`)
-                    : "#";
+                    : router.push(`/post/${notification.data.postId}`);
                 }}
                 key={notification.id}
                 className={`p-4 rounded shadow-sm border cursor-pointer text-zinc-50 ${

@@ -123,6 +123,18 @@ export const moduleApi = {
     return response.json();
   },
 
+  fetchSinglePost: async (postId: string) => {
+    const token = localStorage.getItem("authToken");
+    const response = await fetch(`${backendURL}/post/${postId}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `${token}`,
+      },
+    });
+    return response.json();
+  },
+
   fetchUsers: async (search: string) => {
     const token = localStorage.getItem("authToken");
     const response = await fetch(
