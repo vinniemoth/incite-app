@@ -46,6 +46,18 @@ function setupPostRoutes(postService) {
     }
   });
 
+  router.get("/:postId", async (req, res) => {
+    const { postId } = req.params;
+
+    try {
+      const post = await postService.fetchSinglePost(postId);
+      console.log(post);
+      return res.status(200).json(post);
+    } catch (err) {
+      res.status(500).json({ message: "Erro interno do servidor." });
+    }
+  });
+
   router.get("/:bookId", async (req, res) => {
     const { bookId } = req.params;
 
@@ -87,9 +99,7 @@ function setupPostRoutes(postService) {
       const reactions = await postService.fetchReactions(postId, userId);
       return res.status(200).json(reactions);
     } catch (err) {
-      res
-        .status(500)
-        .json({ message: "Erro interno do servidor. Não sei qual é", err });
+      res.status(500).json({ message: "Erro interno do servidor." });
     }
   });
 

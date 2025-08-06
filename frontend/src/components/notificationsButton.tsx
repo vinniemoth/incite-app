@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { FaBell } from "react-icons/fa6";
 
-export default function BackButton() {
+export default function NotificationsButton() {
   const [unreadCount, setUnreadCount] = useState(0);
   const router = useRouter();
 
