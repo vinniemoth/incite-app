@@ -6,7 +6,7 @@ function setupPostRoutes(postService) {
   router.post("/", async (req, res) => {
     const { author, bookTitle, bookId, bookCover, quote } = req.body;
     const userId = res.user_id;
-
+    console.log(author, bookTitle, bookId, bookCover, quote);
     if (!quote || !author || !bookTitle) {
       return res.status(400).json({ message: "Todos os campos obrigatórios" });
     }
@@ -51,16 +51,14 @@ function setupPostRoutes(postService) {
 
     try {
       const post = await postService.fetchSinglePost(postId);
-      console.log(post);
       return res.status(200).json(post);
     } catch (err) {
       res.status(500).json({ message: "Erro interno do servidor." });
     }
   });
 
-  router.get("/:bookId", async (req, res) => {
+  router.get("/book/:bookId", async (req, res) => {
     const { bookId } = req.params;
-
     try {
       const posts = await postService.fetchBookPost(bookId);
       return res.status(200).json(posts);

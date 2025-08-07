@@ -11,7 +11,7 @@ export default function NotificationsButton() {
 
   const fetchNotifications = async () => {
     const data = await moduleApi.fetchNotifications();
-    const notifications = Array.isArray(data) ? data : data.notifications;
+    const notifications = Array.isArray(data) ? data : data.notifications ?? [];
     const unread = notifications.filter((n: any) => !n.isRead).length;
     setUnreadCount(unread);
   };

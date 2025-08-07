@@ -123,7 +123,6 @@ export default function PostInput() {
     }
 
     const formattedData = await moduleApi.fetchBookInfo(finalBookId!);
-
     const json = await moduleApi.createPost(
       quoteContent,
       formattedData.volumeInfo.authors,
@@ -131,6 +130,7 @@ export default function PostInput() {
       finalBookId,
       selectedBookCover
     );
+    console.log(json);
     toast.success("Quote shared successfully!");
 
     setQuoteContent("");

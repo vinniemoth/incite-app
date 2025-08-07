@@ -26,7 +26,7 @@ export default function NotificationClient() {
         console.error(fetched.error);
         return;
       }
-      setNotifications(fetched.notifications);
+      setNotifications(fetched.notifications ?? []);
     } catch (err) {
       console.error("Error fetching notifications", err);
     }

@@ -19,6 +19,7 @@ class PostService {
         },
       },
     });
+    console.log(newPost);
     return newPost;
   }
 

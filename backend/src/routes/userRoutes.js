@@ -21,7 +21,6 @@ function setupUserRoutes(userService) {
     const followingId = res.user_id;
 
     const fetchedFollow = await userService.fetchFollow(followingId, userId);
-    console.log(fetchedFollow);
     res.status(200).json(fetchedFollow);
   });
 

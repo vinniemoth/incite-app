@@ -1,2 +1,2 @@
 UPDATE "User"
-SET "username" = TRIM(username)
+SET "username" = TRIM(username);

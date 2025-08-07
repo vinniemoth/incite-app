@@ -68,7 +68,7 @@ export const moduleApi = {
 
   fetchPostsByBookId: async (id: string) => {
     const token = localStorage.getItem("authToken");
-    const response = await fetch(`${backendURL}/post/${id}`, {
+    const response = await fetch(`${backendURL}/post/book/${id}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
