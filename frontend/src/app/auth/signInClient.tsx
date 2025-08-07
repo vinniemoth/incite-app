@@ -12,10 +12,42 @@ export default function SignInClient() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState({ username: "", email: "" });
+  let hasError = false;
+  const hasUserNameError = error.username;
+  const hasEmailError = error.email;
   const router = useRouter();
 
   const toggleMode = () => {
     mode === "login" ? setMode("register") : setMode("login");
+  };
+
+  const handleChange = (field: string, value: string) => {
+    if (field === "username") {
+      setUsername(value);
+
+      if (value.includes(" ")) {
+        setError((prev) => ({
+          ...prev,
+          username: "Username cannot contain spaces.",
+        }));
+      } else {
+        setError((prev) => ({ ...prev, username: "" }));
+      }
+    }
+
+    if (field === "email") {
+      setEmail(value);
+      if (!value.includes("@") || !value.includes(".")) {
+        setError((prev) => ({ ...prev, email: "Invalid Email" }));
+      } else {
+        setError((prev) => ({ ...prev, email: "" }));
+      }
+    }
+
+    if (field === "password") {
+      setPassword(value);
+    }
   };
 
   const login = (e: React.FormEvent<HTMLFormElement>) => {
@@ -46,12 +78,23 @@ export default function SignInClient() {
   };
 
   const createUser = async () => {
-    let json = await moduleApi.createUser(username, email, password);
     if (!email || !password || !username) {
       toast.error("There are fields missing.");
       return;
     }
-    if (json.id) {
+    if (hasEmailError) {
+      toast.error(error.email);
+      hasError = true;
+    }
+    if (hasUserNameError) {
+      toast.error(error.username);
+      hasError = true;
+    }
+    if (hasError) {
+      return;
+    }
+    let json = await moduleApi.createUser(username, email, password);
+    if (json) {
       toast.success("User successfully registered.");
     } else {
       toast.error(json.message);
@@ -78,7 +121,7 @@ export default function SignInClient() {
                 type="text"
                 placeholder="Username"
                 value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                onChange={(e) => handleChange("username", e.target.value)}
               />
             </div>
           )}
@@ -89,7 +132,7 @@ export default function SignInClient() {
               type="text"
               placeholder="Email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => handleChange("email", e.target.value)}
             />
           </div>
           <div className="relative sm:w-3/4">
@@ -99,7 +142,7 @@ export default function SignInClient() {
               type="password"
               placeholder="Password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => handleChange("password", e.target.value)}
             />
           </div>
           <button
